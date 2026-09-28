@@ -186,10 +186,11 @@
   /* ---------- Gallery ---------- */
   const galleryEl = $(".gallery");
   const figure = (g) => `
-    <figure class="${g.wide ? "wide " : ""}${g.long ? "long " : ""}${g.video ? "is-video" : ""}">
+    <figure class="${g.wide ? "wide " : ""}${g.long ? "long " : ""}${g.video ? "is-video" : ""}"${g.video ? ` data-story="${esc(g.srcs[0])}"` : ""}>
       ${g.video
-        ? `<video controls playsinline preload="${g.poster ? "none" : "metadata"}"${g.poster ? ` poster="${esc(g.poster)}"` : ""}${g.caption ? ` aria-label="${esc(g.caption)}"` : ""}>
-             ${g.srcs.map((s) => `<source src="${esc(s)}">`).join("")}</video>`
+        ? `<video muted loop playsinline preload="none"${g.poster ? ` poster="${esc(g.poster)}"` : ""} aria-label="${esc(g.caption || "Vasquez Tacos video")}">
+             ${g.srcs.map((s) => `<source src="${esc(s)}">`).join("")}</video>
+           <span class="play-badge" aria-hidden="true">▶</span>`
         : `<img src="${esc(g.img)}" alt="${esc(g.caption || "Vasquez Tacos photo")}" loading="lazy"${g.fallback ? ` data-fallback="${esc(g.fallback)}"` : ""}>`}
       ${g.caption ? `<figcaption>${esc(g.caption)}</figcaption>` : ""}
     </figure>`;
@@ -234,7 +235,11 @@
               : { img: local, fallback: f.download_url, caption: niceCaption(f.name) };
           });
         // Your best photos lead, then everything uploaded to media/
-        if (uploads.length) renderGallery([...SITE.gallery, ...uploads]);
+        uploads.filter((u) => u.video).forEach((u) => addStory({ src: u.srcs[0], fallback: u.srcs[1], poster: u.poster, caption: u.caption || "Vasquez Tacos" }));
+        // Alternate photos and videos so the first rows show both
+        const vids = uploads.filter((u) => u.video), pics = [...SITE.gallery, ...uploads.filter((u) => !u.video)], mixed = [];
+        while (vids.length || pics.length) { if (pics.length) mixed.push(pics.shift()); if (vids.length) mixed.push(vids.shift()); }
+        if (uploads.length) renderGallery(mixed);
       })
       .catch(() => {});
   }
@@ -244,28 +249,186 @@
     if (img.tagName === "IMG" && img.dataset.fallback && img.src !== img.dataset.fallback) img.src = img.dataset.fallback;
   }, true);
 
-  // Hero video card: use the configured clip; show a still image for reduced-motion users
+  /* ---------- Story-style video viewer (full screen, with sound) ---------- */
+  const stories = [];
+  const addStory = (s) => { if (s.src && !stories.some((x) => x.src === s.src)) stories.push(s); };
+  const posterOf = (src) => src.replace(/\.[^.]+$/, ".jpg");
+  const captionOf = (src) => niceCaption(src.split("/").pop()) || "Vasquez Tacos";
+
+  const viewer = document.createElement("dialog");
+  viewer.className = "stories";
+  viewer.innerHTML = `
+    <div class="st-frame">
+      <div class="st-bars"></div>
+      <video class="st-video" playsinline></video>
+      <button class="st-zone st-prev" aria-label="Previous video"></button>
+      <button class="st-zone st-next" aria-label="Next video"></button>
+      <div class="st-top">
+        <img src="logo.jpg" alt=""><b>Vasquez Tacos</b><span class="st-caption"></span>
+        <button class="st-sound" aria-label="Mute">🔊</button>
+        <button class="st-close" aria-label="Close" autofocus>&times;</button>
+      </div>
+      <a href="#quote" class="btn st-cta">Book this for your event</a>
+    </div>`;
+  document.body.append(viewer);
+  const stVideo = $(".st-video", viewer);
+  let stIndex = 0, stMuted = false;
+
+  function showStory(i) {
+    stIndex = (i + stories.length) % stories.length;
+    const s = stories[stIndex];
+    $(".st-bars", viewer).innerHTML = stories.map((_, j) => `<i><b style="width:${j < stIndex ? 100 : 0}%"></b></i>`).join("");
+    $(".st-caption", viewer).textContent = s.caption;
+    stVideo.poster = s.poster || "";
+    stVideo.src = s.src;
+    stVideo.onerror = () => { if (s.fallback && stVideo.src !== s.fallback) stVideo.src = s.fallback; };
+    stVideo.muted = stMuted;
+    stVideo.play().catch(() => { stVideo.muted = true; stVideo.play().catch(() => {}); });
+  }
+  function openStories(src) {
+    if (!stories.length || !viewer.showModal) return;
+    $$("video").forEach((v) => { if (v !== stVideo) v.pause(); });
+    stMuted = false;
+    $(".st-sound", viewer).textContent = "🔊";
+    viewer.showModal();
+    showStory(Math.max(0, stories.findIndex((s) => s.src === src)));
+  }
+  function closeStories() { stVideo.pause(); viewer.close(); resumeLoops(); }
+  stVideo.addEventListener("timeupdate", () => {
+    const bar = $$(".st-bars b", viewer)[stIndex];
+    if (bar && stVideo.duration) bar.style.width = (stVideo.currentTime / stVideo.duration) * 100 + "%";
+  });
+  stVideo.addEventListener("ended", () => showStory(stIndex + 1));
+  $(".st-prev", viewer).addEventListener("click", () => showStory(stIndex - 1));
+  $(".st-next", viewer).addEventListener("click", () => showStory(stIndex + 1));
+  $(".st-close", viewer).addEventListener("click", closeStories);
+  $(".st-cta", viewer).addEventListener("click", closeStories);
+  $(".st-sound", viewer).addEventListener("click", (e) => {
+    stMuted = !stMuted; stVideo.muted = stMuted;
+    e.currentTarget.textContent = stMuted ? "🔇" : "🔊";
+    e.currentTarget.setAttribute("aria-label", stMuted ? "Unmute" : "Mute");
+  });
+  viewer.addEventListener("cancel", (e) => { e.preventDefault(); closeStories(); });
+  viewer.addEventListener("click", (e) => { if (e.target === viewer) closeStories(); });
+  viewer.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") showStory(stIndex + 1);
+    if (e.key === "ArrowLeft") showStory(stIndex - 1);
+  });
+  let touchX = 0;
+  viewer.addEventListener("touchstart", (e) => (touchX = e.touches[0].clientX), { passive: true });
+  viewer.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) showStory(stIndex + (dx < 0 ? 1 : -1));
+  });
+
+  /* ---------- Inline looping clips: tap for sound, tap video for full screen ---------- */
+  const loops = [];
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function soundButton(video) {
+    const b = document.createElement("button");
+    b.className = "sound-btn";
+    b.type = "button";
+    b.innerHTML = `<span>🔇</span> Tap for sound`;
+    b.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const turnOn = video.muted;
+      loops.forEach((v) => { v.muted = true; v.parentElement.querySelector(".sound-btn").innerHTML = `<span>🔇</span> Tap for sound`; });
+      if (turnOn) { video.muted = false; video.play().catch(() => {}); b.innerHTML = `<span>🔊</span> Sound on`; }
+    });
+    return b;
+  }
+  function registerLoop(video, src) {
+    loops.push(video);
+    addStory({ src, poster: posterOf(src), caption: captionOf(src) });
+    video.parentElement.append(soundButton(video));
+    video.style.cursor = "pointer";
+    video.addEventListener("click", () => openStories(src));
+  }
+  const inView = new Set();
+  const loopObserver = "IntersectionObserver" in window && new IntersectionObserver((entries) => entries.forEach((en) => {
+    en.isIntersecting ? inView.add(en.target) : inView.delete(en.target);
+    if (reduceMotion) return;
+    if (en.isIntersecting) en.target.play().catch(() => {}); else en.target.pause();
+  }), { threshold: .35 });
+  function resumeLoops() { if (!reduceMotion) inView.forEach((v) => v.play().catch(() => {})); }
+
+  // Hero video card
   const heroVid = $(".hero-video");
   if (heroVid) {
-    if (SITE.heroVideo) { heroVid.src = SITE.heroVideo; heroVid.poster = SITE.heroVideo.replace(/\.[^.]+$/, ".jpg"); }
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { heroVid.removeAttribute("autoplay"); heroVid.pause(); }
+    const src = SITE.heroVideo || heroVid.getAttribute("src");
+    heroVid.src = src; heroVid.poster = posterOf(src);
+    if (reduceMotion) { heroVid.removeAttribute("autoplay"); heroVid.pause(); }
+    registerLoop(heroVid, src);
+    loopObserver && loopObserver.observe(heroVid);
   }
 
-  // Flat-top clips: muted, looping, only play while on screen
+  // Flat-top clips
   const ftWrap = $(".flat-top-videos");
   const ftList = SITE.flatTopVideos || [];
   $("#flat-top").hidden = !ftList.length;
   ftWrap.innerHTML = ftList.map((src) => `<div class="ft-clip"><video muted loop playsinline preload="none"
-      poster="${esc(src.replace(/\.[^.]+$/, ".jpg"))}" src="${esc(src)}" aria-label="Meat grilling on the flat-top"></video></div>`).join("");
-  const ftVideos = $$("video", ftWrap);
-  if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const vio = new IntersectionObserver((entries) => entries.forEach((en) => {
-      if (en.isIntersecting) en.target.play().catch(() => {}); else en.target.pause();
-    }), { threshold: .35 });
-    ftVideos.forEach((v) => vio.observe(v));
-  } else {
-    ftVideos.forEach((v) => v.setAttribute("controls", ""));
+      poster="${esc(posterOf(src))}" src="${esc(src)}" aria-label="Meat grilling on the flat-top"></video>
+      <span class="ft-expand" aria-hidden="true">⤢</span></div>`).join("");
+  $$("video", ftWrap).forEach((v, i) => { registerLoop(v, ftList[i]); loopObserver && loopObserver.observe(v); });
+
+  // Gallery videos: silent preview on hover, full screen with sound on tap
+  galleryEl.addEventListener("mouseover", (e) => {
+    const v = e.target.closest("figure.is-video")?.querySelector("video");
+    if (v && v.paused && !reduceMotion) { v.muted = true; v.play().catch(() => {}); }
+  });
+  galleryEl.addEventListener("mouseout", (e) => {
+    const fig = e.target.closest("figure.is-video");
+    if (fig && !fig.contains(e.relatedTarget)) fig.querySelector("video").pause();
+  });
+  galleryEl.addEventListener("click", (e) => {
+    const fig = e.target.closest("figure.is-video");
+    if (fig) openStories(fig.dataset.story);
+  });
+
+  /* ---------- Party planner ---------- */
+  const planner = $(".planner");
+  if (planner) {
+    const range = $("input[type=range]", planner), out = $("output", planner), pkgBox = $(".planner-pkgs", planner);
+    let plannerPkg = (SITE.packages.find((p) => p.popular) || SITE.packages[0]).id;
+    pkgBox.innerHTML = SITE.packages.map((p) => `<button type="button" role="radio" data-pkg="${esc(p.id)}" aria-checked="${p.id === plannerPkg}">${esc(p.name)}<small>${money(p.perGuest)}/guest</small></button>`).join("");
+    const setText = (k, v) => ($(`[data-p="${k}"]`, planner).textContent = v);
+    function plan() {
+      const guests = +range.value, pkg = SITE.packages.find((p) => p.id === plannerPkg);
+      const billed = Math.max(guests, pkg.minGuests);
+      out.textContent = guests + (guests >= +range.max ? "+" : "");
+      range.style.setProperty("--fill", ((guests - range.min) / (range.max - range.min)) * 100 + "%");
+      setText("tacos", (guests * 4).toLocaleString());
+      setText("meat", Math.round(guests * .33) + " lbs");
+      setText("taqueros", Math.max(pkg.id === "lacasa" ? 2 : 1, Math.ceil(guests / 100)));
+      setText("total", money(Math.round(pkg.perGuest * billed * 100) / 100));
+      setText("note", guests < pkg.minGuests ? `${pkg.name} has a ${pkg.minGuests}-guest minimum.` : `${money(pkg.perGuest)} × ${guests} guests, plus tax.`);
+    }
+    range.addEventListener("input", plan);
+    pkgBox.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-pkg]");
+      if (!b) return;
+      plannerPkg = b.dataset.pkg;
+      $$("button", pkgBox).forEach((x) => x.setAttribute("aria-checked", x === b));
+      plan();
+    });
+    $(".planner-use", planner).addEventListener("click", () => {
+      form.guests.value = range.value;
+      form.package.value = plannerPkg;
+      updateQuote();
+      $("#quote").scrollIntoView();
+      setTimeout(() => form.name.focus({ preventScroll: true }), 500);
+    });
+    plan();
   }
+
+  /* ---------- Hero numbers count up ---------- */
+  if (!reduceMotion) $$(".hero-stats b").forEach((el) => {
+    const m = el.textContent.match(/^(\d+)(%?)$/);
+    if (!m) return;
+    const end = +m[1], t0 = performance.now();
+    const tick = (t) => { const p = Math.min(1, (t - t0) / 1200); el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))) + m[2]; if (p < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  });
 
   // Tap a photo to see it full size
   const lightbox = document.createElement("dialog");

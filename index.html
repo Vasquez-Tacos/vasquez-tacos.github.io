@@ -81,6 +81,23 @@
         </div>
         <div class="packages"></div>
         <p class="packages-note">More than <span data-custom-over></span> guests or need something different? <a href="#quote">Request a custom quote.</a></p>
+        <div class="planner">
+          <div class="planner-controls">
+            <p class="kicker">Party planner</p>
+            <h3>How much food do you need?</h3>
+            <label class="planner-range">Guests <output>60</output>
+              <input type="range" min="25" max="250" step="5" value="60" aria-label="Number of guests">
+            </label>
+            <div class="planner-pkgs" role="radiogroup" aria-label="Package"></div>
+          </div>
+          <div class="planner-results" aria-live="polite">
+            <div><b data-p="tacos"></b><span>tacos (about 4 per guest)</span></div>
+            <div><b data-p="meat"></b><span>of meat grilled on-site</span></div>
+            <div><b data-p="taqueros"></b><span>taquero(s) on the flat-top</span></div>
+            <div class="planner-total"><b data-p="total"></b><span data-p="note"></span></div>
+            <button type="button" class="btn btn-lg planner-use">Use this for my quote →</button>
+          </div>
+        </div>
       </div>
     </section>
 
