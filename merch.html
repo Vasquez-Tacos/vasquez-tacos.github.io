@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Merch | Vasquez Tacos</title>
-  <meta name="description" content="Vasquez Tacos shirts, hoodies, hats, aprons and stickers. Rep the best tacos in Fontana.">
+  <meta name="description" content="Vasquez Tacos tees, hoodies, hats, aprons, keychains, bottle openers and stickers. Rep the best tacos in Fontana.">
   <meta name="theme-color" content="#1c1210">
   <link rel="icon" href="logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,700;1,9..144,800&family=DM+Sans:wght@400;500;700&family=Oswald:wght@500;600;700&family=Yellowtail&family=Graduate&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="merch-page">
 
   <header class="nav scrolled">
     <div class="wrap nav-inner">
@@ -22,24 +22,48 @@
       </a>
       <nav class="nav-links nav-links-simple">
         <a href="index.html">← Back to site</a>
-        <a href="index.html#quote" class="btn btn-small">Get a Quote</a>
+        <a href="#shop" class="btn btn-small">Shop</a>
       </nav>
     </div>
   </header>
 
   <main>
     <section class="merch-hero">
-      <div class="wrap">
-        <p class="kicker">Merch</p>
-        <h1>Rep the <em>best tacos</em> in town.</h1>
-        <p class="lead" data-merch-note></p>
-        <a data-phone class="btn btn-lg"></a>
+      <div class="wrap merch-hero-inner">
+        <div>
+          <p class="kicker">Fontana blue collection</p>
+          <h1>Rep the <span class="script-word">Vasquez</span> crew.</h1>
+          <p class="lead" data-merch-note></p>
+          <div class="hero-cta">
+            <a href="#shop" class="btn btn-lg">Shop the collection</a>
+            <a data-phone class="btn btn-lg btn-ghost"></a>
+          </div>
+        </div>
+        <div class="merch-lineup" aria-hidden="true"></div>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="shop">
       <div class="wrap">
+        <div class="split-head">
+          <div>
+            <p class="kicker">Shop</p>
+            <h2>Shop all merch</h2>
+          </div>
+          <p>Tap a color to preview it, flip to the back, pick your size, then send your order by text. We'll confirm and have it ready at your next pickup.</p>
+        </div>
+        <div class="shop-bar">
+          <div class="shop-tabs" role="tablist" aria-label="Categories"></div>
+          <label class="shop-sort-label">Sort
+            <select class="shop-sort">
+              <option value="featured">Featured</option>
+              <option value="low">Price: low to high</option>
+              <option value="high">Price: high to low</option>
+            </select>
+          </label>
+        </div>
         <div class="merch-grid"></div>
+        <p class="shop-note">All merch is made to order. Allow 1–2 weeks. Pay by text link, Venmo, Zelle or cash at pickup.</p>
       </div>
     </section>
 
@@ -50,7 +74,7 @@
             <p class="kicker">Crew gear</p>
             <h2>The Vasquez Tacos crew uniform.</h2>
           </div>
-          <p>What our team wears at every event, so guests know who's cooking. These aren't for sale. The specs are ready to hand to a print shop.</p>
+          <p>What our team wears at every event, so guests know who's cooking. Not for sale. The specs are ready to hand to a print shop.</p>
         </div>
         <div class="merch-grid crew-grid"></div>
       </div>

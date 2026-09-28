@@ -159,6 +159,9 @@
         </div>
       </article>`).join("");
   }
+  const soon = SITE.comingSoon || [];
+  $(".coming-soon").hidden = !soon.length;
+  $(".cs-list").innerHTML = soon.map(([name, desc]) => `<li><span class="cs-tag">Soon</span><b>${esc(name)}</b><small>${esc(desc)}</small></li>`).join("");
   tabs.innerHTML = SITE.menu.map((c, i) => `<button role="tab" data-i="${i}">${esc(c.category)}</button>`).join("");
   tabs.addEventListener("click", (e) => { if (e.target.dataset.i) showMenu(+e.target.dataset.i); });
   showMenu(0);
