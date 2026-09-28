@@ -4,11 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vasquez Tacos | Taco Catering in Fontana, CA</title>
-  <meta name="description" content="Vasquez Tacos is a family-owned taco catering company in Fontana, California. Homemade salsas, rice, beans and meats, plus setup, tables, plates and on-site cooking for your event.">
-  <link rel="icon" href="logo.png">
+  <meta name="description" content="Vasquez Tacos is a family-owned taco catering company in Fontana, California. Taquero catering from $13.50 per guest, plus weekly specials, tamales, pozole and menudo.">
+  <meta name="theme-color" content="#1c1210">
+  <link rel="icon" href="logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,700;1,9..144,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,19 +17,20 @@
   <header class="nav">
     <div class="wrap nav-inner">
       <a href="#top" class="logo">
-        <img src="logo.png" alt="" class="logo-img" onerror="this.remove()">
+        <img src="logo.jpg" alt="" class="logo-img" width="44" height="44">
         <span class="logo-text">Vasquez <em>Tacos</em></span>
       </a>
       <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
       <nav class="nav-links">
-        <a href="#top">Home</a>
+        <a href="#packages">Catering</a>
+        <a href="#specials">Meal Deals</a>
+        <a href="#events">Events</a>
         <a href="#menu">Menu</a>
-        <a href="#packages">Packages</a>
         <a href="#availability">Availability</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#reviews">Reviews</a>
+        <a href="merch.html">Merch</a>
+        <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
-        <a href="#pay" class="btn btn-small">Pay Online</a>
+        <a href="#quote" class="btn btn-small">Get a Quote</a>
       </nav>
     </div>
   </header>
@@ -38,69 +40,98 @@
     <!-- HERO -->
     <section class="hero">
       <div class="wrap hero-inner">
-        <div class="hero-text">
-          <p class="hero-kicker">Family owned &amp; operated · Fontana, CA</p>
-          <h1>Book Taco Catering for Your Next <span>Event!</span></h1>
-          <p class="lead">Make your party unforgettable with our fresh, homemade street tacos. We handle the cooking, setup, tables and plates. You enjoy the party.</p>
+        <div>
+          <p class="eyebrow">Family owned · Fontana, CA</p>
+          <h1>Street tacos for your <em>next event.</em></h1>
+          <p class="lead">A taquero cooking on-site, handmade tortillas, and salsas and meats from our family's recipes. Premium event catering from <strong data-from-price></strong> per guest across the Inland Empire, plus weekly taco meal deals.</p>
           <div class="hero-cta">
-            <a href="#quote" class="btn btn-lg">Get a Free Quote <span aria-hidden="true">›</span></a>
-            <a href="#availability" class="btn btn-lg btn-light">Check Dates</a>
+            <a href="#quote" class="btn btn-lg">Get a Free Quote</a>
+            <a href="#specials" class="btn btn-lg btn-ghost">See Meal Deals</a>
           </div>
+          <ul class="hero-stats">
+            <li><b>100%</b><span>Homemade</span></li>
+            <li><b>25–250+</b><span>Guests</span></li>
+            <li><b data-deposit-pct-label></b><span>Deposit holds your date</span></li>
+          </ul>
+          <ul class="badges"></ul>
         </div>
+        <img src="logo.jpg" alt="Vasquez Tacos logo: Best in Town, Fontana, California" class="hero-logo" width="257" height="256">
       </div>
     </section>
 
-    <!-- CHECK BAR -->
-    <div class="checkbar">
-      <ul class="wrap">
-        <li>Affordable Packages</li>
-        <li>Everything Homemade</li>
-        <li>Setup &amp; Cleanup Included</li>
-        <li>Family Owned</li>
-      </ul>
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Carne Asada</span><span>Al Pastor</span><span>Pollo Asado</span><span>Carnitas</span><span>Barbacoa</span><span>Handmade Tortillas</span><span>Taco Tuesday</span><span>Salsa Taquera</span><span>Horchata</span>
+        <span>Carne Asada</span><span>Al Pastor</span><span>Pollo Asado</span><span>Carnitas</span><span>Barbacoa</span><span>Handmade Tortillas</span><span>Taco Tuesday</span><span>Salsa Taquera</span><span>Horchata</span>
+      </div>
     </div>
 
     <!-- PACKAGES -->
     <section class="section" id="packages">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="confetti">Our Taco Catering Packages</h2>
-          <p>Perfect for any party size and budget!</p>
+          <p class="kicker">Catering packages</p>
+          <h2>Premium taco catering, priced per guest.</h2>
+          <p>From hot drop-off taco bars to a live trompo at your wedding. Setup, serving and cleanup are handled by our family, with no hidden fees.</p>
         </div>
         <div class="packages"></div>
-        <p class="packages-note">More than 100 guests? <a href="#quote">Request a custom quote.</a></p>
+        <p class="packages-note">More than <span data-custom-over></span> guests or need something different? <a href="#quote">Request a custom quote.</a></p>
+      </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section class="section alt" id="events">
+      <div class="wrap">
+        <div class="split-head">
+          <div>
+            <p class="kicker">Events we cater</p>
+            <h2>Every celebration is better with tacos.</h2>
+          </div>
+          <p>From backyard birthdays to 200-guest weddings, we bring the grill, the taquero and everything homemade. You enjoy the party.</p>
+        </div>
+        <div class="events">
+          <article class="event-card c1" style="--bg: url(images/trompo.jpg)"><span>01</span><h3>Weddings</h3><p>A late-night taco bar or the main meal. Guests always remember the tacos.</p></article>
+          <article class="event-card c2" style="--bg: url(images/street-tacos.jpg)"><span>02</span><h3>Birthdays</h3><p>Backyard parties of every size, from 25 guests up.</p></article>
+          <article class="event-card c3" style="--bg: url(images/al-pastor.jpg)"><span>03</span><h3>Quinceañeras</h3><p>Full setup with multiple taqueros so every guest eats fast.</p></article>
+          <article class="event-card c4" style="--bg: url(images/carne-asada.jpg)"><span>04</span><h3>Graduations</h3><p>Open-house style service that keeps the tacos coming.</p></article>
+          <article class="event-card c5" style="--bg: url(images/tortillas.jpg)"><span>05</span><h3>Corporate &amp; Church</h3><p>Team lunches, fundraisers and community events, with invoices on request.</p></article>
+          <article class="event-card c6 holiday-event" style="--bg: url(images/tamales.jpg)"><span>06</span><h3>Holiday Parties</h3><p>Tacos plus our holiday menu: tamales, pozole, menudo &amp; champurrado.</p></article>
+        </div>
+
+        <article class="holiday" hidden>
+          <img class="holiday-img" src="images/tamales.jpg" alt="Tamales steaming in a pot" loading="lazy">
+          <div class="holiday-head">
+            <p class="kicker">Holiday events only</p>
+            <h3 class="holiday-title"></h3>
+            <p class="holiday-note"></p>
+          </div>
+          <dl class="price-list holiday-list"></dl>
+        </article>
+      </div>
+    </section>
+
+    <!-- MEAL DEALS -->
+    <section class="section dark" id="specials">
+      <div class="wrap">
+        <div class="split-head">
+          <div>
+            <p class="kicker">Meal deals</p>
+            <h2>Tacos all week long.</h2>
+          </div>
+          <p data-pickup></p>
+        </div>
+        <div class="specials"></div>
       </div>
     </section>
 
     <!-- WHY CHOOSE -->
-    <section class="section alt" id="about">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 class="confetti">Why Choose Vasquez Tacos?</h2>
-          <p>One family, real recipes, and everything made from scratch.</p>
-        </div>
-        <div class="why">
-          <div class="why-item">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="16" width="52" height="32" rx="5" fill="#6aa84f"/><rect x="11" y="21" width="42" height="22" rx="3" fill="none" stroke="#e7f3df" stroke-width="2"/><circle cx="32" cy="32" r="8" fill="#e7f3df"/><text x="32" y="37" text-anchor="middle" font-size="13" font-weight="700" fill="#3e7a2a" font-family="Arial">$</text></svg>
-            <h3>Affordable Pricing</h3>
-            <p>Flat-price packages with no surprises.</p>
-          </div>
-          <div class="why-item">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 44a24 24 0 0 1 48 0z" fill="#f2c14e"/><path d="M14 42c4-10 12-12 18-12s14 2 18 12" fill="none" stroke="#8b3a1e" stroke-width="6" stroke-linecap="round"/><circle cx="22" cy="34" r="3" fill="#4f8a3c"/><circle cx="34" cy="31" r="3" fill="#d9432f"/><circle cx="43" cy="35" r="3" fill="#4f8a3c"/><path d="M8 44h48" stroke="#d99a2b" stroke-width="3"/></svg>
-            <h3>Authentic &amp; Homemade</h3>
-            <p>Salsas, rice, beans and meats made from scratch.</p>
-          </div>
-          <div class="why-item">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="26" width="52" height="6" rx="3" fill="#8b3a1e"/><path d="M12 32v22M52 32v22" stroke="#8b3a1e" stroke-width="5" stroke-linecap="round"/><rect x="16" y="16" width="14" height="10" rx="2" fill="#d9432f"/><rect x="34" y="12" width="14" height="14" rx="2" fill="#f2c14e"/></svg>
-            <h3>Full Event Setup</h3>
-            <p>Tables, plates, cooking, serving and cleanup.</p>
-          </div>
-          <div class="why-item">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#f2a93b"><path d="M16 10l3.5 7 7.5 1-5.5 5 1.5 7.5-7-3.8-7 3.8 1.5-7.5L5 18l7.5-1z"/><path d="M48 10l3.5 7 7.5 1-5.5 5 1.5 7.5-7-3.8-7 3.8 1.5-7.5-5.5-5 7.5-1z"/><path d="M32 30l3.5 7 7.5 1-5.5 5 1.5 7.5-7-3.8-7 3.8 1.5-7.5-5.5-5 7.5-1z"/></g></svg>
-            <h3>Best in Town</h3>
-            <p>Family owned &amp; operated, serving Fontana with pride.</p>
-          </div>
-        </div>
+    <section class="section alt">
+      <div class="wrap why">
+        <div class="why-item"><b>01</b><h3>Premium, never frozen</h3><p>Meats marinated overnight, salsas made the morning of, tortillas pressed to order.</p></div>
+        <div class="why-item"><b>02</b><h3>Cooked fresh on-site</h3><p>Your guests get tacos hot off the plancha, not from a tray that's been sitting.</p></div>
+        <div class="why-item"><b>03</b><h3>Full setup &amp; cleanup</h3><p>We bring the grill, tables, serving gear and plates, and leave your space clean.</p></div>
+        <div class="why-item"><b>04</b><h3>Upfront pricing</h3><p>See your full estimate instantly below. You talk to the family that cooks your food, not a call center.</p></div>
       </div>
     </section>
 
@@ -108,29 +139,50 @@
     <section class="section" id="menu">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="confetti">Our Menu</h2>
-          <p>Everything is made from scratch by the Vasquez family.</p>
+          <p class="kicker">Nuestro menú</p>
+          <h2>Everything made from scratch.</h2>
         </div>
         <div class="menu-tabs" role="tablist"></div>
         <div class="menu-grid"></div>
+        <div class="merch-teaser">
+          <div><h3>Vasquez Tacos merch</h3><p>Tees, hoodies, hats, aprons &amp; stickers. Rep the best tacos in town.</p></div>
+          <a href="merch.html" class="btn">Shop Merch</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL CLIPS -->
+    <section class="section dark" id="social" hidden>
+      <div class="wrap">
+        <div class="split-head">
+          <div>
+            <p class="kicker">Follow along</p>
+            <h2>Fresh off the grill, on your feed.</h2>
+          </div>
+          <div class="follow"></div>
+        </div>
+        <div class="clips"></div>
       </div>
     </section>
 
     <!-- GALLERY -->
-    <section class="section alt" id="gallery">
+    <section class="section" id="gallery" hidden>
       <div class="wrap">
         <div class="section-head">
-          <h2 class="brush">Taco Catering for Every Occasion!</h2>
+          <p class="kicker">Gallery</p>
+          <h2>Taco catering for every occasion.</h2>
+          <p>Weddings, birthdays, quinceañeras, graduations, church and corporate events.</p>
         </div>
         <div class="gallery"></div>
       </div>
     </section>
 
     <!-- AVAILABILITY -->
-    <section class="section" id="availability">
+    <section class="section alt" id="availability">
       <div class="wrap avail-grid">
         <div>
-          <h2>Check Availability</h2>
+          <p class="kicker">Book your date</p>
+          <h2>Check availability.</h2>
           <p>Tap an open date to start your quote. Weekends fill up fast, especially spring through fall.</p>
           <ul class="legend">
             <li><i class="dot open"></i>Available</li>
@@ -152,19 +204,22 @@
     </section>
 
     <!-- REVIEWS + QUOTE + CONTACT -->
-    <section class="section orange" id="reviews">
+    <section class="section dark" id="reviews">
       <div class="wrap">
-        <h2 class="on-orange">Customer Reviews</h2>
+        <div class="section-head">
+          <p class="kicker">Reviews</p>
+          <h2>What our families say.</h2>
+        </div>
         <div class="reviews"></div>
 
         <div class="quote-grid" id="quote">
           <form class="card book-form" novalidate>
-            <h2>Get a Free Quote!</h2>
-            <p class="form-sub">Fill out the form to get a free estimate for your event. We'll call you to confirm.</p>
+            <h2>Get a free quote</h2>
+            <p class="form-sub">See your estimate instantly. We'll call you to confirm your date and details.</p>
 
             <div class="row">
               <label>Name<input name="name" required autocomplete="name"></label>
-              <label>Phone<input name="phone" type="tel" required autocomplete="tel"></label>
+              <label>Phone<input name="phone" type="tel" required autocomplete="tel" inputmode="tel"></label>
             </div>
             <label>Email<input name="email" type="email" required autocomplete="email"></label>
             <div class="row">
@@ -172,12 +227,12 @@
               <label>Start time<input name="time" type="time"></label>
             </div>
             <div class="row">
-              <label>Number of guests<input name="guests" type="number" min="1" step="1" required></label>
+              <label>Number of guests<input name="guests" type="number" min="1" step="1" required inputmode="numeric" placeholder="e.g. 60"></label>
               <label>Event type
                 <select name="eventType">
                   <option>Birthday</option><option>Wedding</option><option>Quinceañera</option>
                   <option>Graduation</option><option>Baptism</option><option>Corporate</option>
-                  <option>Church / Community</option><option>Other</option>
+                  <option>Church / Community</option><option>Holiday Party</option><option>Other</option>
                 </select>
               </label>
             </div>
@@ -192,20 +247,26 @@
               <dl class="quote-lines"></dl>
               <div class="quote-total"><span>Estimated total</span><strong data-total>$0</strong></div>
               <div class="quote-deposit"><span>Deposit to hold your date (<span data-deposit-pct></span>%)</span><strong data-deposit>$0</strong></div>
+              <p class="estimate-fine">Plus sales tax. Travel is free within 25 miles of Fontana.</p>
             </div>
 
             <p class="form-msg" role="status"></p>
-            <button class="btn btn-full btn-lg" type="submit">Get My Free Quote</button>
+            <button class="btn btn-full btn-lg" type="submit">Request My Booking</button>
+            <p class="form-alt">Prefer to text? <a data-sms>Text us your event details</a> or call <a data-phone></a>.</p>
           </form>
 
           <aside class="card contact" id="contact">
-            <h3>Contact Us</h3>
+            <p class="kicker">Contact us</p>
             <p class="contact-phone"><a data-phone></a></p>
+            <div class="contact-actions">
+              <a data-phone class="btn btn-small">Call</a>
+              <a data-sms class="btn btn-small btn-outline">Text us</a>
+            </div>
             <p><a data-email></a></p>
             <p data-hours></p>
             <p data-area></p>
             <div class="map">
-              <iframe title="Map of Fontana, California" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              <iframe data-map title="Map of Vasquez Tacos location" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                 src="https://www.google.com/maps?q=Fontana,+CA&z=12&output=embed"></iframe>
             </div>
           </aside>
@@ -213,49 +274,79 @@
       </div>
     </section>
 
-    <!-- PAYMENTS -->
+    <!-- HOW IT WORKS + PAYMENTS -->
     <section class="section" id="pay">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="confetti">Easy Payments</h2>
-          <p>Book, pay and relax. It's that simple.</p>
+          <p class="kicker">How it works</p>
+          <h2>Book, pay and relax.</h2>
         </div>
         <div class="pay-steps">
-          <div class="step"><b>1</b><h3>Request</h3><p>Send your quote request. We'll confirm your date and final price.</p></div>
+          <div class="step"><b>1</b><h3>Request</h3><p>Send your quote request. We'll confirm your date, menu and final price.</p></div>
           <div class="step"><b>2</b><h3>Deposit</h3><p>Pay a <span data-deposit-pct></span>% deposit to lock in your date.</p></div>
-          <div class="step"><b>3</b><h3>Balance</h3><p>Pay the rest up to 3 days before your event. Then enjoy the tacos!</p></div>
+          <div class="step"><b>3</b><h3>Enjoy</h3><p>Pay the balance 3 days before. We show up, cook, serve and clean up.</p></div>
         </div>
         <div class="pay-options"></div>
+
+        <h3 class="policies-title">Our policies</h3>
+        <dl class="policies"></dl>
       </div>
     </section>
 
     <!-- FAQ -->
     <section class="section alt" id="faq">
       <div class="wrap narrow">
-        <div class="section-head"><h2>Questions</h2></div>
+        <div class="section-head"><p class="kicker">FAQ</p><h2>Questions? We've got answers.</h2></div>
         <div class="faq-list"></div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-band">
+      <div class="wrap">
+        <h2>Let's make your party one to remember.</h2>
+        <div class="hero-cta">
+          <a href="#quote" class="btn btn-lg">Get a Free Quote</a>
+          <a data-phone class="btn btn-lg btn-ghost"></a>
+        </div>
       </div>
     </section>
 
   </main>
 
+  <!-- Mobile quick-action bar -->
+  <nav class="mobile-bar" aria-label="Quick actions">
+    <a data-phone class="mb-call" aria-label="Call us">Call</a>
+    <a data-sms class="mb-text" aria-label="Text us">Text</a>
+    <a href="#quote" class="btn mb-book">Book Now</a>
+  </nav>
+
   <footer class="footer">
     <div class="wrap footer-grid">
       <div>
+        <img src="logo.jpg" alt="" class="footer-logo" width="88" height="88">
         <p class="logo-text">Vasquez <em>Tacos</em></p>
         <p class="footer-tag">Best in Town · Food Events · Catering · Parties</p>
         <p>Family-owned Mexican taco catering in Fontana, California.</p>
       </div>
       <div>
-        <h4>Contact</h4>
-        <p><a data-phone></a><br><a data-email></a></p>
+        <h4>Visit</h4>
+        <p><a href="#specials">Weekly specials</a><br><a href="#packages">Catering packages</a><br><a href="#menu">Menu</a><br><a href="merch.html">Merch</a><br><a href="#pay">Payments</a></p>
       </div>
       <div>
+        <h4>Contact</h4>
+        <p><a data-phone></a><br><a data-email></a></p>
         <h4>Follow</h4>
         <p class="socials"></p>
       </div>
     </div>
-    <p class="wrap copyright">&copy; <span data-year></span> Vasquez Tacos. Made from scratch, served with love.</p>
+    <div class="wrap">
+      <details class="credits">
+        <summary>Photo credits</summary>
+        <ul></ul>
+      </details>
+      <p class="copyright">&copy; <span data-year></span> Vasquez Tacos. Made from scratch, served with love.</p>
+    </div>
   </footer>
 
   <script src="config.js"></script>

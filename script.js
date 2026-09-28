@@ -24,24 +24,127 @@
 
   /* ---------- Contact info ---------- */
   const telHref = "tel:" + biz.phone.replace(/[^\d+]/g, "");
-  $$("[data-phone]").forEach((a) => { a.textContent = biz.phone; a.href = telHref; });
+  $$("[data-phone]").forEach((a) => { if (!a.textContent.trim()) a.textContent = biz.phone; a.href = telHref; });
+  // Text-message links open the phone's texting app with a starter message
+  const smsHref = (body) => `sms:${biz.phone.replace(/[^\d+]/g, "")}?&body=${encodeURIComponent(body)}`;
+  $$("[data-sms]").forEach((a) => (a.href = smsHref("Hi Vasquez Tacos! I'd like to book taco catering. Date: ___ Guests: ___ City: ___")));
+
+  // Service-area map (city only, no street address)
+  $$("[data-map]").forEach((f) => (f.src = `https://www.google.com/maps?q=${encodeURIComponent(biz.city)}&z=11&output=embed`));
+
+  // Business details for Google search results
+  const ld = document.createElement("script");
+  ld.type = "application/ld+json";
+  ld.textContent = JSON.stringify({
+    "@context": "https://schema.org", "@type": "FoodEstablishment", servesCuisine: "Mexican",
+    name: biz.name, description: biz.tagline, telephone: biz.phone, image: new URL("logo.jpg", location.href).href,
+    ...(biz.website && { url: biz.website }), ...(biz.email && { email: biz.email }),
+    address: { "@type": "PostalAddress", addressLocality: "Fontana", addressRegion: "CA", addressCountry: "US" },
+    areaServed: biz.serviceArea, priceRange: "$$",
+    sameAs: Object.entries(SITE.social || {}).filter(([, h]) => h).map(([k, h]) =>
+      ({ instagram: `https://www.instagram.com/${h}/`, tiktok: `https://www.tiktok.com/@${h}`, facebook: `https://www.facebook.com/${h}`, youtube: `https://www.youtube.com/@${h}` }[k])),
+  });
+  document.head.append(ld);
   $$("[data-email]").forEach((a) => { if (biz.email) { a.textContent = biz.email; a.href = "mailto:" + biz.email; } else a.remove(); });
   $$("[data-area]").forEach((el) => (el.textContent = `${biz.city} · Serving ${biz.serviceArea}`));
   $$("[data-hours]").forEach((el) => (el.textContent = biz.hours));
   $$("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
   $$("[data-deposit-pct]").forEach((el) => (el.textContent = pay.depositPercent));
-  const socials = [["Instagram", biz.instagram], ["Facebook", biz.facebook]].filter(([, url]) => url);
+  $$("[data-deposit-pct-label]").forEach((el) => (el.textContent = pay.depositPercent + "%"));
+  $$("[data-pickup]").forEach((el) => (el.textContent = biz.pickup || ""));
+  $$("[data-custom-over]").forEach((el) => (el.textContent = SITE.customQuoteOver));
+  const fromPrice = Math.min(...SITE.packages.map((p) => p.perGuest));
+  $$("[data-from-price]").forEach((el) => (el.textContent = money(fromPrice)));
+  $(".badges").innerHTML = (biz.credentials || []).map((c) => `<li>${esc(c)}</li>`).join("");
+  /* ---------- Social handles + clips ---------- */
+  const handle = (h) => String(h || "").trim().replace(/^@/, "");
+  const PROFILES = {
+    instagram: ["Instagram", (h) => `https://www.instagram.com/${h}/`],
+    tiktok: ["TikTok", (h) => `https://www.tiktok.com/@${h}`],
+    facebook: ["Facebook", (h) => `https://www.facebook.com/${h}`],
+    youtube: ["YouTube", (h) => `https://www.youtube.com/@${h}`],
+  };
+  const socials = Object.entries(SITE.social || {}).filter(([k, h]) => PROFILES[k] && handle(h))
+    .map(([k, h]) => [PROFILES[k][0], PROFILES[k][1](encodeURIComponent(handle(h))), handle(h)]);
   $(".socials").innerHTML = socials.length
     ? socials.map(([n, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${n}</a>`).join("<br>")
     : `<a href="${telHref}">Call us: ${esc(biz.phone)}</a>`;
+  $(".follow").innerHTML = socials.map(([n, url, h]) =>
+    `<a class="btn btn-ghost btn-small" href="${esc(url)}" target="_blank" rel="noopener">${n} · @${esc(h)}</a>`).join("");
 
-  /* ---------- Mobile nav ---------- */
-  const toggle = $(".nav-toggle"), links = $(".nav-links");
-  toggle.addEventListener("click", () => {
-    const open = links.classList.toggle("open");
-    toggle.setAttribute("aria-expanded", open);
-  });
-  links.addEventListener("click", (e) => { if (e.target.tagName === "A") { links.classList.remove("open"); toggle.setAttribute("aria-expanded", false); } });
+  // Turn a pasted post/video link into that platform's official embed
+  const scripts = new Set();
+  const loadScript = (src) => { if (scripts.has(src)) return; scripts.add(src); const s = document.createElement("script"); s.src = src; s.async = true; document.body.append(s); };
+  function clipHTML(raw) {
+    let u; try { u = new URL(raw.trim()); } catch { return ""; }
+    const host = u.hostname.replace(/^www\.|^m\./, "");
+    if (host === "instagram.com" && /^\/(p|reel|tv)\/[\w-]+/.test(u.pathname)) {
+      loadScript("https://www.instagram.com/embed.js");
+      const link = `https://www.instagram.com${u.pathname.match(/^\/(p|reel|tv)\/[\w-]+/)[0]}/`;
+      return `<blockquote class="instagram-media" data-instgrm-permalink="${esc(link)}" data-instgrm-version="14"><a href="${esc(link)}" target="_blank" rel="noopener">View on Instagram</a></blockquote>`;
+    }
+    const tt = host === "tiktok.com" && u.pathname.match(/\/video\/(\d+)/);
+    if (tt) {
+      loadScript("https://www.tiktok.com/embed.js");
+      return `<blockquote class="tiktok-embed" cite="${esc(u.href)}" data-video-id="${tt[1]}"><section><a href="${esc(u.href)}" target="_blank" rel="noopener">View on TikTok</a></section></blockquote>`;
+    }
+    const yt = (host === "youtu.be" && u.pathname.slice(1)) ||
+      (host === "youtube.com" && (u.searchParams.get("v") || (u.pathname.match(/^\/(shorts|embed|live)\/([\w-]+)/) || [])[2]));
+    if (yt && /^[\w-]{6,}$/.test(yt)) {
+      const tall = u.pathname.startsWith("/shorts/");
+      return `<div class="clip-frame${tall ? " tall" : ""}"><iframe src="https://www.youtube-nocookie.com/embed/${yt}" title="YouTube video" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+    }
+    if (host === "facebook.com" || host === "fb.watch") {
+      return `<div class="clip-frame tall"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(u.href)}&show_text=false" title="Facebook video" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+    }
+    return "";
+  }
+  const clips = (SITE.socialClips || []).map(clipHTML).filter(Boolean);
+  $(".clips").innerHTML = clips.map((c) => `<div class="clip">${c}</div>`).join("");
+  $("#social").hidden = !clips.length && !socials.length;
+
+  /* ---------- Nav ---------- */
+  const nav = $(".nav"), toggle = $(".nav-toggle"), links = $(".nav-links");
+  const setOpen = (open) => { links.classList.toggle("open", open); nav.classList.toggle("menu-open", open); toggle.setAttribute("aria-expanded", open); };
+  toggle.addEventListener("click", () => setOpen(!links.classList.contains("open")));
+  links.addEventListener("click", (e) => { if (e.target.tagName === "A") setOpen(false); });
+  const bar = $(".mobile-bar");
+  let formInView = false;
+  const onScroll = () => {
+    nav.classList.toggle("scrolled", scrollY > 40 || !$(".hero"));
+    bar?.classList.toggle("show", scrollY > innerHeight * .6 && !formInView);
+  };
+  addEventListener("scroll", onScroll, { passive: true });
+  if (bar && "IntersectionObserver" in window) {
+    new IntersectionObserver(([en]) => { formInView = en.isIntersecting; onScroll(); }).observe($(".book-form"));
+  }
+  onScroll();
+
+  /* ---------- Weekly specials ---------- */
+  const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const priceRows = (rows) => rows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
+  $(".specials").innerHTML = SITE.specials.map((s) => {
+    const weekly = s.day !== undefined;
+    const isToday = weekly && s.day === new Date().getDay();
+    return `
+    <article class="special${isToday ? " today" : ""}">
+      ${isToday ? `<span class="today-tag">Today</span>` : ""}
+      ${s.img ? `<img src="${esc(s.img)}" alt="" loading="lazy">` : ""}
+      <div class="special-body">
+        <span class="special-day">${weekly ? `Every ${DAYS[s.day]}` : esc(s.label || "Every day")}</span>
+        <h3>${esc(s.name)}</h3>
+        <p class="special-deal">${esc(s.deal)}</p>
+        <dl class="price-list">${priceRows(s.items)}</dl>
+      </div>
+    </article>`;
+  }).join("");
+  if (SITE.showHoliday && SITE.holiday) {
+    const h = $(".holiday");
+    h.hidden = false;
+    $(".holiday-title", h).textContent = SITE.holiday.title;
+    $(".holiday-note", h).textContent = SITE.holiday.note;
+    $(".holiday-list", h).innerHTML = priceRows(SITE.holiday.items);
+  }
 
   /* ---------- Menu ---------- */
   const tabs = $(".menu-tabs"), menuGrid = $(".menu-grid");
@@ -49,8 +152,11 @@
     $$("button", tabs).forEach((b, j) => b.setAttribute("aria-selected", i === j));
     menuGrid.innerHTML = SITE.menu[i].items.map((it) => `
       <article class="menu-item">
-        <h3>${esc(it.name)}${it.tag ? `<span class="tag ${esc(it.tag)}">${esc(it.tag)}</span>` : ""}</h3>
-        <p>${esc(it.desc)}</p>
+        ${it.img ? `<img src="${esc(it.img)}" alt="" loading="lazy">` : ""}
+        <div>
+          <h3>${esc(it.name)}${it.tag ? `<span class="tag ${esc(it.tag)}">${esc(it.tag)}</span>` : ""}</h3>
+          <p>${esc(it.desc)}</p>
+        </div>
       </article>`).join("");
   }
   tabs.innerHTML = SITE.menu.map((c, i) => `<button role="tab" data-i="${i}">${esc(c.category)}</button>`).join("");
@@ -58,24 +164,26 @@
   showMenu(0);
 
   /* ---------- Packages ---------- */
-  const maxPkgGuests = Math.max(...SITE.packages.map((p) => p.maxGuests));
+  const customOver = SITE.customQuoteOver;
   $(".packages").innerHTML = SITE.packages.map((p) => `
-    <article class="package ${esc(p.color || "red")}">
-      <h3 class="ribbon">${esc(p.name)} Package</h3>
+    <article class="package${p.popular ? " popular" : ""}">
       ${p.popular ? `<span class="popular-tag">Most Popular</span>` : ""}
-      <p class="price">${money(p.price)} <small>for</small></p>
-      <p class="guests">${esc(p.guestsLabel)}</p>
+      <h3>${esc(p.name)}</h3>
+      <p class="package-blurb">${esc(p.blurb)}</p>
+      <p class="price">${money(p.perGuest)} <small>/ guest</small></p>
+      <p class="guests">${p.minGuests}-guest minimum (${money(p.perGuest * p.minGuests)})</p>
       <ul>${p.includes.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
-      <a href="#quote" class="btn" data-pick="${esc(p.id)}">Book Now <span aria-hidden="true">›</span></a>
+      <a href="#quote" class="btn${p.popular ? "" : " btn-outline"}" data-pick="${esc(p.id)}">Choose ${esc(p.name)}</a>
     </article>`).join("");
   $(".packages").addEventListener("click", (e) => {
     const id = e.target.closest("[data-pick]")?.dataset.pick;
-    if (id) { form.package.value = id; pkgChosenByUser = true; updateQuote(); }
+    if (id) { form.package.value = id; updateQuote(); }
   });
 
   /* ---------- Gallery ---------- */
+  $("#gallery").hidden = !SITE.gallery.length;
   $(".gallery").innerHTML = SITE.gallery.map((g) =>
-    `<figure style="--photo: url('${encodeURI(g.img)}')"><figcaption>${esc(g.caption)}</figcaption></figure>`).join("");
+    `<figure${g.wide ? ` class="wide"` : ""}><img src="${esc(g.img)}" alt="${esc(g.caption)}" loading="lazy"><figcaption>${esc(g.caption)}</figcaption></figure>`).join("");
 
   /* ---------- Reviews ---------- */
   const reviewLinks = [["Review us on Google", biz.googleReviews], ["Review us on Yelp", biz.yelp]].filter(([, u]) => u);
@@ -139,19 +247,9 @@
   /* ---------- Booking form + quote ---------- */
   const form = $(".book-form"), msg = $(".form-msg");
   form.date.min = toISO(earliest);
-  let pkgChosenByUser = false;
-  form.package.innerHTML = SITE.packages.map((p) => `<option value="${esc(p.id)}"${p.popular ? " selected" : ""}>${esc(p.name)}: ${money(p.price)} (${esc(p.guestsLabel.toLowerCase())})</option>`).join("");
+  form.package.innerHTML = SITE.packages.map((p) => `<option value="${esc(p.id)}"${p.popular ? " selected" : ""}>${esc(p.name)}: ${money(p.perGuest)} per guest (${p.minGuests} min.)</option>`).join("");
   $(".addons").insertAdjacentHTML("beforeend", SITE.addons.map((a) => `
     <label><input type="checkbox" name="addon" value="${esc(a.id)}"> ${esc(a.name)} <small>${money(a.price)}/${a.per}</small></label>`).join(""));
-  form.package.addEventListener("change", () => (pkgChosenByUser = true));
-  // Pick the package that fits the guest count (unless the customer chose one bigger)
-  form.guests.addEventListener("input", () => {
-    const n = parseInt(form.guests.value, 10);
-    if (!n) return;
-    const fit = SITE.packages.find((p) => n <= p.maxGuests) || SITE.packages[SITE.packages.length - 1];
-    const current = SITE.packages.find((p) => p.id === form.package.value);
-    if (!pkgChosenByUser || current.maxGuests < n) form.package.value = fit.id;
-  });
 
   function setMsg(text, type = "") { msg.textContent = text; msg.className = "form-msg " + type; }
 
@@ -177,20 +275,21 @@
   function getQuote() {
     const pkg = SITE.packages.find((p) => p.id === form.package.value);
     const entered = parseInt(form.guests.value, 10) || 0;
-    const guests = Math.min(entered, pkg.maxGuests) || pkg.maxGuests;
-    const lines = [[`${pkg.name} Package (${pkg.guestsLabel.toLowerCase()})`, pkg.price]];
+    const guests = Math.max(entered, pkg.minGuests);
+    const lines = [[`${pkg.name} × ${guests} guests @ ${money(pkg.perGuest)}`, pkg.perGuest * guests]];
     $$("input[name=addon]:checked", form).forEach((cb) => {
       const a = SITE.addons.find((x) => x.id === cb.value);
       lines.push([a.per === "guest" ? `${a.name} × ${guests}` : a.name, a.per === "guest" ? a.price * guests : a.price]);
     });
-    const total = lines.reduce((s, [, v]) => s + v, 0);
-    return { pkg, guests, entered, custom: entered > maxPkgGuests, lines, total, deposit: Math.round(total * pay.depositPercent) / 100 };
+    const total = Math.round(lines.reduce((s, [, v]) => s + v, 0) * 100) / 100;
+    return { pkg, guests, entered, custom: entered > customOver, lines, total, deposit: Math.round(total * pay.depositPercent) / 100 };
   }
   function updateQuote() {
     const q = getQuote();
     $(".quote-lines").innerHTML = q.lines.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${money(v)}</dd></div>`).join("")
-      + (q.custom ? `<div class="warn"><dt>${q.entered} guests is over ${maxPkgGuests}. We'll send you a custom quote.</dt><dd></dd></div>` : "")
-      + (!q.entered ? `<div class="warn"><dt>Add-ons estimated at ${q.guests} guests. Enter your guest count.</dt><dd></dd></div>` : "");
+      + (q.custom ? `<div class="warn"><dt>${q.entered} guests is over ${customOver}. We'll send you a custom quote.</dt><dd></dd></div>` : "")
+      + (!q.entered ? `<div class="warn"><dt>Showing the ${q.pkg.minGuests}-guest minimum. Enter your guest count.</dt><dd></dd></div>` : "")
+      + (q.entered && q.entered < q.pkg.minGuests ? `<div class="warn"><dt>Under ${q.pkg.minGuests} guests, the package minimum applies.</dt><dd></dd></div>` : "");
     $("[data-total]").textContent = money(q.total);
     $("[data-deposit]").textContent = money(q.deposit);
   }
@@ -215,7 +314,7 @@
       date: form.date.value, time: form.time.value, guests: form.guests.value,
       eventType: form.eventType.value, location: form.location.value,
       package: q.pkg.name, addons: q.lines.slice(1).map(([k]) => k).join(", ") || "None",
-      estimate: q.custom ? "Custom quote needed (over " + maxPkgGuests + " guests)" : money(q.total),
+      estimate: q.custom ? "Custom quote needed (over " + customOver + " guests)" : money(q.total),
       deposit: money(q.deposit), notes: form.notes.value,
     };
     const btn = $("button[type=submit]", form);
@@ -230,14 +329,26 @@
           body: JSON.stringify({ _subject: `New booking request: ${data.date} (${data.guests} guests)`, ...data }),
         });
         if (!res.ok) throw new Error("send failed");
-        form.reset(); selectedISO = ""; pkgChosenByUser = false; renderCalendar(); updateQuote();
+        form.reset(); selectedISO = ""; renderCalendar(); updateQuote();
         setMsg("¡Gracias! Your request was sent. Our family will call or email you within 24 hours to confirm.", "ok");
       } else if (biz.email) {
         const body = Object.entries(data).map(([k, v]) => `${k}: ${v}`).join("\n");
         location.href = `mailto:${biz.email}?subject=${encodeURIComponent("Booking request: " + data.date)}&body=${encodeURIComponent(body)}`;
         setMsg("Your email app should open with your request filled in. Just press send.", "ok");
       } else {
-        setMsg(`To finish booking, please call or text us at ${biz.phone}. Your estimate is ${data.estimate}.`, "ok");
+        // No form service or email yet: send the request as a text message
+        const text = [
+          `Booking request - ${data.name}`,
+          `${data.eventType} on ${data.date}${data.time ? " at " + data.time : ""}`,
+          `${data.guests} guests in ${data.location}`,
+          `Package: ${data.package}`,
+          `Add-ons: ${data.addons}`,
+          `Estimate: ${data.estimate}`,
+          `Phone: ${data.phone} · Email: ${data.email}`,
+          data.notes && `Notes: ${data.notes}`,
+        ].filter(Boolean).join("\n");
+        location.href = smsHref(text);
+        setMsg(`Your texting app should open with your request filled in. Just press send. If it didn't open, call or text us at ${biz.phone}.`, "ok");
       }
     } catch {
       setMsg(`Something went wrong sending your request. Please call or text us at ${biz.phone}.`, "error");
@@ -258,6 +369,21 @@
 
   /* ---------- FAQ ---------- */
   $(".faq-list").innerHTML = SITE.faq.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("");
+
+  /* ---------- Policies + photo credits ---------- */
+  $(".policies").innerHTML = SITE.policies.map(([t, d]) => `<div><dt>${esc(t)}</dt><dd>${esc(d)}</dd></div>`).join("");
+  $(".credits").hidden = !SITE.credits.length;
+  $(".credits ul").innerHTML = SITE.credits.map(([what, who, lic, url]) =>
+    `<li><a href="${esc(url)}" target="_blank" rel="noopener">${esc(what)}</a> by ${esc(who)}, ${esc(lic)}</li>`).join("");
+
+  /* ---------- Fade sections in as you scroll ---------- */
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+    }), { rootMargin: "0px 0px -8% 0px" });
+    $$(".event-card, .special, .holiday, .package, .why-item, .gallery figure, .step, .split-head, .section-head")
+      .forEach((el) => { el.classList.add("reveal"); io.observe(el); });
+  }
 
   renderCalendar();
 })();
