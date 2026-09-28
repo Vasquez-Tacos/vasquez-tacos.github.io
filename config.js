@@ -15,7 +15,7 @@ const SITE = {
     website: "",                       // your live site URL once it's published
     serviceArea: "Fontana & the Inland Empire",
     hours: "Events 7 days a week · Calls & texts 9am–8pm",
-    pickup: "Call or text to order meal deals for pickup. Please order the day before for party trays.",
+    pickup: "Call, text or message us on Facebook to order. Delivery available for 5+ orders. Please order the day before for party trays.",
     googleReviews: "",                 // link from your Google Business Profile
     yelp: "",                          // link to your Yelp page
     /* Only list what you actually have. Each shows as a badge
@@ -176,16 +176,28 @@ const SITE = {
      or leave day out for a deal that's available every day.        */
   specials: [
     {
-      day: 2, name: "Taco Tuesday", img: "images/street-tacos.jpg",
-      deal: "$2 street tacos",
+      day: 4, name: "Taco Thursday", img: "images/taco-thursday.jpg",
+      deal: "Fresh, hot taco plates",
       items: [
-        ["Street tacos (asada, pastor, pollo)", "$2 each"],
-        ["10 tacos + chips & salsa", "$22"],
-        ["Party tray: 30 tacos", "$60"],
+        ["3 tacos (asada, pastor or chicken)", ""],
+        ["Rice, beans, chips & salsa", ""],
+        ["Taco plate", "$13.99"],
+        ["Add a drink", "+$2.50"],
+        ["Extra tacos", "$3 each"],
       ],
     },
     {
-      day: 5, name: "Family Taco Night", img: "images/carnitas.jpg",
+      name: "Burrito Special", label: "Weekly special", img: "images/burrito.jpg",
+      deal: "$12 with chips, salsa & a drink",
+      items: [
+        ["Asada or chicken burrito", ""],
+        ["Rice, beans, cilantro, onions & cheese", ""],
+        ["Chips & salsa + Coke, Coke Zero or Sprite", ""],
+        ["Burrito special", "$12"],
+      ],
+    },
+    {
+      day: 5, name: "Family Taco Night", img: "images/taco-plate.jpg",
       deal: "Feeds 4 for $42",
       items: [
         ["16 tacos, 2 meats of your choice", ""],
@@ -195,25 +207,16 @@ const SITE = {
       ],
     },
     {
-      name: "Taco Plates", label: "Every day", img: "images/barbacoa.jpg",
-      deal: "Plates from $13.99",
+      name: "Party Trays & Boxed Meals", label: "Every day · order a day ahead", img: "images/boxed-meals.jpg",
+      deal: "Offices, teams & game day",
       items: [
-        ["3 tacos + rice & beans", "$13.99"],
-        ["Add an agua fresca", "+$3.50"],
-        ["Quesabirria tacos (3), with consommé", "$16.99"],
-      ],
-    },
-    {
-      name: "Party Trays", label: "Every day · order a day ahead", img: "images/taquero.jpg",
-      deal: "Perfect for game day",
-      items: [
+        ["Boxed taco plates (10+ orders)", "$13.99 each"],
         ["50 tacos, 2 meats + salsas & toppings", "$115"],
         ["100 tacos, 3 meats + salsas & toppings", "$215"],
         ["Rice & beans tray (serves 20)", "$50"],
       ],
     },
   ],
-
   /* ---------- HOLIDAY MENU ----------
      The only place tamales, pozole and menudo appear.
      Set showHoliday to false to hide it outside the season.       */
@@ -235,8 +238,28 @@ const SITE = {
   /* ---------- GALLERY ----------
      Hidden until photos are added. Put your photos in the "images"
      folder and list them like:
-     { img: "images/party-1.jpg", caption: "Backyard birthday", wide: true } */
-  gallery: [],
+     { img: "images/party-1.jpg", caption: "Backyard birthday", wide: true }
+     wide = big 2x2 tile, long = 2 columns wide.                      */
+  gallery: [
+    { img: "images/wedding-setup.jpg", caption: "Wedding taco bar", wide: true },
+    { img: "images/salsa-bar.jpg", caption: "Salsa bar & toppings" },
+    { img: "images/chafing-trays.jpg", caption: "Party setup" },
+    { img: "images/salsa-prep.jpg", caption: "Salsa prep" },
+    { img: "images/taco-plate.jpg", caption: "Taco plate" },
+    { img: "images/boxed-meals.jpg", caption: "Boxed meals for a big order", long: true },
+    { img: "images/taco-thursday.jpg", caption: "Taco Thursday plate" },
+    { img: "images/burrito.jpg", caption: "Burrito special" },
+  ],
+
+  /* ---------- YOUR PHOTOS & VIDEOS ----------
+     Upload photos (.jpg .png .webp) and videos (.mp4 .mov .webm) to the
+     "media" folder of the GitHub repo. They appear in the gallery
+     automatically, newest file name first. No code changes needed.   */
+  media: {
+    repo: "mariobejarano14mb-creator/VasquezTacos",
+    folder: "media",
+    branch: "main",
+  },
 
   /* ---------- MENU ----------
      Optional: add img: "images/your-photo.jpg" to any item. */
@@ -244,11 +267,11 @@ const SITE = {
     {
       category: "Taco Meats",
       items: [
-        { name: "Carne Asada", desc: "Marinated flank steak, grilled over open flame.", img: "images/carne-asada.jpg" },
-        { name: "Al Pastor", desc: "Chile-marinated pork with pineapple, family recipe.", img: "images/al-pastor.jpg" },
+        { name: "Carne Asada", desc: "Marinated flank steak, grilled over open flame." },
+        { name: "Al Pastor", desc: "Chile-marinated pork with pineapple, family recipe." },
         { name: "Pollo Asado", desc: "Citrus & achiote chicken, grilled and chopped." },
-        { name: "Carnitas", desc: "Slow-cooked pork, crispy on the edges.", img: "images/carnitas.jpg" },
-        { name: "Barbacoa", desc: "Beef braised for hours in chiles and spices.", img: "images/barbacoa.jpg" },
+        { name: "Carnitas", desc: "Slow-cooked pork, crispy on the edges." },
+        { name: "Barbacoa", desc: "Beef braised for hours in chiles and spices." },
         { name: "Veggie", desc: "Grilled peppers, onions, calabacitas & beans.", tag: "Vegetarian" },
       ],
     },
@@ -257,14 +280,14 @@ const SITE = {
       items: [
         { name: "Mexican Rice", desc: "Tomato-simmered rice made from scratch." },
         { name: "Refried Beans", desc: "Pinto beans cooked daily, finished with queso fresco." },
-        { name: "Elote", desc: "Street corn with crema, cotija & chile.", img: "images/elote.jpg" },
+        { name: "Elote", desc: "Street corn with crema, cotija & chile." },
         { name: "Chips & Salsa", desc: "Fresh-fried tortilla chips with house salsa." },
       ],
     },
     {
       category: "Salsas",
       items: [
-        { name: "Salsa Roja", desc: "Roasted tomato & chile de árbol.", tag: "Medium", img: "images/salsa-molcajete.jpg" },
+        { name: "Salsa Roja", desc: "Roasted tomato & chile de árbol.", tag: "Medium" },
         { name: "Salsa Verde", desc: "Tomatillo, serrano & cilantro.", tag: "Mild" },
         { name: "Salsa Taquera", desc: "Our hottest salsa. Ask the family about it.", tag: "Hot" },
         { name: "Guacamole", desc: "Mashed fresh at every event." },
@@ -285,18 +308,18 @@ const SITE = {
   /* ---------- MERCH (merch.html) ----------
      type: tee, hoodie, hat, tote, apron, sticker
      color: garment color. print: "logo" (big front), "chest" (small
-     left-chest logo), or any text to print, e.g. "TACO TUESDAY".
+     left-chest logo), or any text to print, e.g. "TACO THURSDAY".
      back: optional text printed on the back (shown as a 2nd view).  */
   merchNote: "Call or text to order. Pick up at any Vasquez Tacos event or meal-deal pickup. Sizes S–3XL.",
   merch: [
     { name: "Classic Logo Tee", type: "tee", color: "#1c1210", print: "logo", price: 32, colors: "Black, Cream, Red" },
-    { name: "Taco Tuesday Tee", type: "tee", color: "#f6bd2f", print: "TACO TUESDAY", price: 32, colors: "Gold, Black" },
+    { name: "Taco Thursday Tee", type: "tee", color: "#f6bd2f", print: "TACO THURSDAY", price: 32, colors: "Gold, Black" },
     { name: "Logo Hoodie", type: "hoodie", color: "#7a1d16", print: "logo", price: 60, colors: "Maroon, Black" },
     { name: "Snapback Hat", type: "hat", color: "#1c1210", print: "logo", price: 36, colors: "Black, Red" },
     { name: "Dad Hat", type: "hat", color: "#efe3cf", print: "logo", price: 32, colors: "Cream, Tan" },
     { name: "Tote Bag", type: "tote", color: "#efe3cf", print: "logo", price: 24, colors: "Natural canvas" },
     { name: "Backyard Taquero Apron", type: "apron", color: "#d8342a", print: "logo", price: 42, colors: "Red, Black" },
-    { name: "Sticker Pack (3)", type: "sticker", color: "#ffffff", print: "logo", price: 7, colors: "Logo, Taco Tuesday, Salsa Taquera" },
+    { name: "Sticker Pack (3)", type: "sticker", color: "#ffffff", print: "logo", price: 7, colors: "Logo, Taco Thursday, Salsa Taquera" },
   ],
   /* Crew uniforms: not for sale. Specs are for ordering from a print shop. */
   crew: [
@@ -337,18 +360,5 @@ const SITE = {
   /* ---------- PHOTO CREDITS ----------
      Only needed for photos you didn't take yourself.
      Format: ["What", "Photographer", "License", "Link"]             */
-  credits: [
-    ["Al pastor tacos (hero)", "City Foodsters", "CC BY 2.0", "https://commons.wikimedia.org/wiki/File:(El_Flaco)_Al_Pastor_Tacos.jpg"],
-    ["Trompo", "ProtoplasmaKid", "CC BY-SA 4.0", "https://commons.wikimedia.org/wiki/File:Trompo_de_tacos_al_pastor.jpg"],
-    ["Al pastor close-up", "Koffermejia", "CC BY-SA 4.0", "https://commons.wikimedia.org/wiki/File:Trompo_de_pastor,_detalle_-_festival_del_taco_en_xalapa_2023.jpg"],
-    ["Street tacos", "LWYang", "CC BY 2.0", "https://commons.wikimedia.org/wiki/File:Street_tacos_in_Mexico_City_(8495923877).jpg"],
-    ["Carne asada", "Sarah Stierch", "CC BY 4.0", "https://commons.wikimedia.org/wiki/File:Carne_Asada_-_Taqueria_La_Hacienda_-_December_2022_-_Sarah_Stierch_01.jpg"],
-    ["Carnitas", "Ferfive", "CC BY 4.0", "https://commons.wikimedia.org/wiki/File:CAZO_DE_CARNITAS.jpg"],
-    ["Barbacoa tacos", "Jj saezdeo", "CC BY-SA 4.0", "https://commons.wikimedia.org/wiki/File:Barbacoa_tacos_from_Actopan_in_Mexico_City.jpg"],
-    ["Taquero", "Daniel Case", "CC BY-SA 3.0", "https://commons.wikimedia.org/wiki/File:Man_making_tacos_on_the_street_in_Mexico_City.jpg"],
-    ["Elote", "ProtoplasmaKid", "CC BY-SA 3.0", "https://commons.wikimedia.org/wiki/File:Elote_as%C3%A1ndose.jpg"],
-    ["Salsa in molcajete", "ProtoplasmaKid", "CC BY-SA 4.0", "https://commons.wikimedia.org/wiki/File:Molcajete_con_salsa_roja_mexicana_-_1.jpg"],
-    ["Tortillas on the comal", "Artemisa Martínez", "CC0", "https://commons.wikimedia.org/wiki/File:Tortillas_en_comal.jpg"],
-    ["Tamales", "Public domain", "Public domain", "https://commons.wikimedia.org/wiki/File:Tamales_mexicanos_navidad2004.jpg"],
-  ],
+  credits: [],
 };

@@ -6,7 +6,7 @@ $root = $PSScriptRoot
 $types = @{
   ".html" = "text/html; charset=utf-8"; ".css" = "text/css; charset=utf-8"; ".js" = "text/javascript; charset=utf-8"
   ".png" = "image/png"; ".jpg" = "image/jpeg"; ".jpeg" = "image/jpeg"; ".webp" = "image/webp"
-  ".svg" = "image/svg+xml"; ".ico" = "image/x-icon"; ".json" = "application/json"; ".md" = "text/plain; charset=utf-8"
+  ".svg" = "image/svg+xml"; ".gif" = "image/gif"; ".avif" = "image/avif"; ".mp4" = "video/mp4"; ".m4v" = "video/mp4"; ".mov" = "video/quicktime"; ".webm" = "video/webm"; ".ico" = "image/x-icon"; ".json" = "application/json"; ".md" = "text/plain; charset=utf-8"
 }
 
 $listener = New-Object System.Net.HttpListener

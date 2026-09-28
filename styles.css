@@ -91,7 +91,7 @@ h3 { font-size: 1.3rem; }
   background:
     linear-gradient(90deg, rgba(20,12,10,.95) 0%, rgba(20,12,10,.82) 42%, rgba(20,12,10,.45) 100%),
     linear-gradient(0deg, rgba(20,12,10,.7), transparent 40%),
-    url("images/hero.jpg") center/cover no-repeat,
+    url("images/wedding-setup.jpg") center/cover no-repeat,
     var(--night);
 }
 /* Papel picado-style dotted texture */
@@ -113,7 +113,7 @@ h3 { font-size: 1.3rem; }
 .badges:empty { display: none; }
 .badges li { font-size: .82rem; font-weight: 700; padding: .45em .9em; border-radius: 999px; background: rgba(255,255,255,.12); }
 .badges li::before { content: "✓ "; color: var(--yellow); }
-.hero-logo { justify-self: center; width: min(100%, 320px); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; box-shadow: 0 0 0 10px rgba(246,189,47,.15), 0 30px 80px rgba(0,0,0,.6); animation: spin-in 1s ease-out both .3s; }
+.hero-logo { justify-self: end; align-self: end; width: min(100%, 230px); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; box-shadow: 0 0 0 10px rgba(246,189,47,.15), 0 30px 80px rgba(0,0,0,.6); animation: spin-in 1s ease-out both .3s; }
 @keyframes spin-in { from { opacity: 0; transform: rotate(-20deg) scale(.8); } }
 
 /* Marquee */
@@ -140,7 +140,7 @@ h3 { font-size: 1.3rem; }
 .event-card.c4 { --tint: 79, 138, 60; }
 .event-card.c5 { --tint: 58, 42, 37; }
 .event-card.c6 { --tint: 122, 29, 22; box-shadow: inset 0 0 0 1.5px rgba(246,189,47,.5); }
-.holiday { margin-top: 1.2rem; border-radius: var(--radius); padding: 2.2rem; background: linear-gradient(135deg, #7a1d16, #2a0c09); color: #f0d9c9; display: grid; grid-template-columns: 220px 1fr 1.4fr; gap: 1rem 2.4rem; align-items: start; }
+.holiday { margin-top: 1.2rem; border-radius: var(--radius); padding: 2.2rem; background: linear-gradient(135deg, #7a1d16, #2a0c09); color: #f0d9c9; display: grid; grid-template-columns: 1fr 1.4fr; gap: 1rem 2.4rem; align-items: start; }
 .holiday-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; box-shadow: 0 0 0 1.5px rgba(246,189,47,.4); }
 .holiday .kicker { color: var(--yellow); }
 .holiday h3 { color: #fff; font-size: 2rem; }
@@ -211,6 +211,8 @@ h3 { font-size: 1.3rem; }
 .gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 1rem; }
 .gallery figure { margin: 0; border-radius: var(--radius); overflow: hidden; position: relative; background: var(--night); }
 .gallery figure.wide { grid-column: span 2; grid-row: span 2; }
+.gallery figure.long { grid-column: span 2; }
+.gallery { grid-auto-flow: dense; }
 .gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
 .gallery figure:hover img { transform: scale(1.05); }
 .gallery figcaption { position: absolute; inset: auto 0 0; padding: 2.4rem 1rem .9rem; background: linear-gradient(transparent, rgba(0,0,0,.75)); color: #fff; font-weight: 500; font-size: .95rem; }
@@ -253,6 +255,16 @@ h3 { font-size: 1.3rem; }
 .clip-frame { position: relative; aspect-ratio: 16 / 9; }
 .clip-frame.tall { aspect-ratio: 9 / 16; max-height: 620px; margin-inline: auto; }
 .clip-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* Gallery videos + lightbox */
+.gallery figure { cursor: zoom-in; }
+.gallery figure.is-video { cursor: default; }
+.gallery video { width: 100%; height: 100%; object-fit: cover; background: #000; display: block; }
+.gallery figure.is-video figcaption { pointer-events: none; padding-top: 1rem; bottom: auto; top: 0; background: linear-gradient(rgba(0,0,0,.6), transparent); }
+.lightbox { border: 0; padding: 0; background: transparent; max-width: min(94vw, 1200px); max-height: 92vh; overflow: visible; }
+.lightbox::backdrop { background: rgba(15, 9, 7, .9); }
+.lightbox img { max-width: 100%; max-height: 88vh; border-radius: 12px; display: block; margin: auto; }
+.lightbox-close { position: absolute; top: -44px; right: 0; background: none; border: 0; color: #fff; font-size: 2.2rem; line-height: 1; cursor: pointer; }
 
 /* Calendar */
 .avail-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; align-items: center; }
@@ -360,7 +372,7 @@ h3 { font-size: 1.3rem; }
 .faq-list details p { margin: 0; padding: 0 1.4rem 1.3rem; color: var(--muted); }
 
 /* CTA band */
-.cta-band { background: linear-gradient(rgba(20,12,10,.78), rgba(20,12,10,.88)), url("images/trompo.jpg") center 30%/cover no-repeat, var(--night); color: #fff; text-align: center; padding-block: 96px; }
+.cta-band { background: linear-gradient(rgba(20,12,10,.78), rgba(20,12,10,.88)), url("images/salsa-prep.jpg") center/cover no-repeat, var(--night); color: #fff; text-align: center; padding-block: 96px; }
 .cta-band h2 { color: #fff; max-width: 18ch; margin: 0 auto 1.8rem; }
 .cta-band .hero-cta { justify-content: center; }
 
@@ -435,7 +447,7 @@ h3 { font-size: 1.3rem; }
   .holiday-img { aspect-ratio: 16 / 9; }
   .hero { background:
     linear-gradient(rgba(20,12,10,.72), rgba(20,12,10,.92)),
-    url("images/hero.jpg") center/cover no-repeat, var(--night); }
+    url("images/wedding-setup.jpg") center/cover no-repeat, var(--night); }
 }
 /* Booking helpers */
 .contact-actions { display: flex; gap: .5rem; margin: .2rem 0 1rem; }

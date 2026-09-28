@@ -181,9 +181,64 @@
   });
 
   /* ---------- Gallery ---------- */
-  $("#gallery").hidden = !SITE.gallery.length;
-  $(".gallery").innerHTML = SITE.gallery.map((g) =>
-    `<figure${g.wide ? ` class="wide"` : ""}><img src="${esc(g.img)}" alt="${esc(g.caption)}" loading="lazy"><figcaption>${esc(g.caption)}</figcaption></figure>`).join("");
+  const galleryEl = $(".gallery");
+  const figure = (g) => `
+    <figure class="${g.wide ? "wide " : ""}${g.long ? "long " : ""}${g.video ? "is-video" : ""}">
+      ${g.video
+        ? `<video controls playsinline preload="metadata"${g.caption ? ` aria-label="${esc(g.caption)}"` : ""}>
+             ${g.srcs.map((s) => `<source src="${esc(s)}">`).join("")}</video>`
+        : `<img src="${esc(g.img)}" alt="${esc(g.caption || "Vasquez Tacos photo")}" loading="lazy"${g.fallback ? ` data-fallback="${esc(g.fallback)}"` : ""}>`}
+      ${g.caption ? `<figcaption>${esc(g.caption)}</figcaption>` : ""}
+    </figure>`;
+  const renderGallery = (items) => {
+    $("#gallery").hidden = !items.length;
+    galleryEl.innerHTML = items.map(figure).join("");
+  };
+  renderGallery(SITE.gallery);
+
+  // Photos & videos uploaded to the repo's media folder show up automatically
+  const IMG_EXT = /\.(jpe?g|png|webp|gif|avif)$/i, VID_EXT = /\.(mp4|m4v|mov|webm)$/i;
+  const niceCaption = (name) => /^(img|vid|pxl|dsc|mvimg|screenshot|\d)/i.test(name) ? ""
+    : name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").replace(/^\w/, (c) => c.toUpperCase());
+  if (SITE.media?.repo) {
+    const { repo, folder, branch } = SITE.media;
+    fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=${branch}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((files) => {
+        const uploads = files.filter((f) => f.type === "file" && (IMG_EXT.test(f.name) || VID_EXT.test(f.name)))
+          .sort((a, b) => b.name.localeCompare(a.name, undefined, { numeric: true }))
+          .map((f) => {
+            const local = `${folder}/${encodeURIComponent(f.name)}`;
+            return VID_EXT.test(f.name)
+              ? { video: true, srcs: [local, f.download_url], caption: niceCaption(f.name) }
+              : { img: local, fallback: f.download_url, caption: niceCaption(f.name) };
+          });
+        if (uploads.length) {
+          renderGallery([...uploads, ...SITE.gallery]);
+          galleryEl.querySelectorAll("figure").forEach((el) => el.classList.add("reveal", "in"));
+        }
+      })
+      .catch(() => {});
+  }
+  // If an uploaded photo isn't on this server yet, load it straight from GitHub
+  galleryEl.addEventListener("error", (e) => {
+    const img = e.target;
+    if (img.tagName === "IMG" && img.dataset.fallback && img.src !== img.dataset.fallback) img.src = img.dataset.fallback;
+  }, true);
+
+  // Tap a photo to see it full size
+  const lightbox = document.createElement("dialog");
+  lightbox.className = "lightbox";
+  lightbox.innerHTML = `<button class="lightbox-close" aria-label="Close">&times;</button><img alt="">`;
+  document.body.append(lightbox);
+  galleryEl.addEventListener("click", (e) => {
+    const img = e.target.closest("figure:not(.is-video)")?.querySelector("img");
+    if (!img || !lightbox.showModal) return;
+    $("img", lightbox).src = img.currentSrc || img.src;
+    $("img", lightbox).alt = img.alt;
+    lightbox.showModal();
+  });
+  lightbox.addEventListener("click", () => lightbox.close());
 
   /* ---------- Reviews ---------- */
   const reviewLinks = [["Review us on Google", biz.googleReviews], ["Review us on Yelp", biz.yelp]].filter(([, u]) => u);
