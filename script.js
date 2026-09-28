@@ -195,7 +195,7 @@
         : `<img src="${esc(g.img)}" alt="${esc(g.caption || "Vasquez Tacos photo")}" loading="lazy"${g.fallback ? ` data-fallback="${esc(g.fallback)}"` : ""}>`}
       ${g.caption ? `<figcaption>${esc(g.caption)}</figcaption>` : ""}
     </figure>`;
-  const GALLERY_START = 9;
+  const GALLERY_START = 8;   // fills whole rows on desktop and phone
   let galleryItems = [], showAll = false;
   const renderGallery = (items) => {
     galleryItems = items;
@@ -692,7 +692,7 @@
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => entries.forEach((en) => {
       if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
-    }), { rootMargin: "0px 0px -8% 0px" });
+    }), { rootMargin: "0px 0px -40px 0px" });
     $$(".event-card, .special, .holiday, .package, .why-item, .gallery figure, .step, .split-head, .section-head")
       .forEach((el) => { el.classList.add("reveal"); io.observe(el); });
   }
