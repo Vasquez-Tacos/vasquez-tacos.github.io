@@ -129,7 +129,8 @@
     return `
     <article class="special${isToday ? " today" : ""}">
       ${isToday ? `<span class="today-tag">Today</span>` : ""}
-      ${s.img ? `<img src="${esc(s.img)}" alt="" loading="lazy">` : ""}
+      ${s.video ? `<div class="special-media"><video class="special-video" data-src="${esc(s.video)}" muted loop playsinline preload="none" aria-label="${esc(s.name)}"></video></div>`
+        : s.img ? `<img src="${esc(s.img)}" alt="" loading="lazy">` : ""}
       <div class="special-body">
         <span class="special-day">${weekly ? `Every ${DAYS[s.day]}` : esc(s.label || "Every day")}</span>
         <h3>${esc(s.name)}</h3>
@@ -225,7 +226,10 @@
         const base = (n) => n.replace(/\.[^.]+$/, "").toLowerCase();
         const videoNames = new Set(files.filter((f) => VID_EXT.test(f.name)).map((f) => base(f.name)));
         const posterFor = (n) => files.find((f) => IMG_EXT.test(f.name) && base(f.name) === base(n));
-        const featured = new Set([...(SITE.flatTopVideos || []), SITE.heroVideo || ""].filter(Boolean).map((p) => base(p.split("/").pop())));
+        // Skip clips already featured in another section so nothing repeats
+        const featured = new Set([...(SITE.flatTopVideos || []), SITE.heroVideo, SITE.whyVideo, SITE.eventsVideo,
+          ...(SITE.customerPosts || []).map((p) => p.video), ...SITE.specials.map((s) => s.video)]
+          .filter(Boolean).map((p) => base(p.split("/").pop())));
         const uploads = files.filter((f) => f.type === "file" && !featured.has(base(f.name)) && (VID_EXT.test(f.name) || (IMG_EXT.test(f.name) && !videoNames.has(base(f.name)))))
           .sort((a, b) => b.name.localeCompare(a.name, undefined, { numeric: true }))
           .map((f) => {
@@ -321,55 +325,103 @@
     if (Math.abs(dx) > 50) showStory(stIndex + (dx < 0 ? 1 : -1));
   });
 
-  /* ---------- Inline looping clips: tap for sound, tap video for full screen ---------- */
+  /* ---------- Inline looping clips ----------
+     Muted until the visitor taps a sound button. After that, "sound mode"
+     follows them: whichever clip is on screen plays with sound. */
   const loops = [];
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let soundOn = false;
+  const audible = (v) => v.dataset.audible === "1";
+  function refreshSoundButtons() {
+    document.body.classList.toggle("sound-on", soundOn);
+    loops.forEach((v) => {
+      const b = v.parentElement.querySelector(".sound-btn");
+      if (!b) return;
+      b.innerHTML = !v.muted ? `<span>🔊</span> Sound on` : soundOn ? `<span>🔈</span> Tap to hear this` : `<span>🔇</span> Tap for sound`;
+    });
+  }
+  function hearOnly(video) {
+    loops.forEach((v) => { if (v !== video) v.muted = true; });
+    if (video) { video.muted = false; video.play().catch(() => {}); }
+    refreshSoundButtons();
+  }
   function soundButton(video) {
     const b = document.createElement("button");
     b.className = "sound-btn";
     b.type = "button";
-    b.innerHTML = `<span>🔇</span> Tap for sound`;
     b.addEventListener("click", (e) => {
       e.stopPropagation();
-      const turnOn = video.muted;
-      loops.forEach((v) => { v.muted = true; v.parentElement.querySelector(".sound-btn").innerHTML = `<span>🔇</span> Tap for sound`; });
-      if (turnOn) { video.muted = false; video.play().catch(() => {}); b.innerHTML = `<span>🔊</span> Sound on`; }
+      if (video.muted) { soundOn = true; hearOnly(video); }
+      else { soundOn = false; hearOnly(null); }
     });
     return b;
   }
-  function registerLoop(video, src) {
+  // opts.silent: clip has no audio. opts.decor: background only (no sound, no viewer)
+  function registerLoop(video, src, opts = {}) {
+    if (!src || loops.includes(video)) return;
+    video.src = src;
+    video.poster = posterOf(src);
     loops.push(video);
-    addStory({ src, poster: posterOf(src), caption: captionOf(src) });
-    video.parentElement.append(soundButton(video));
+    if (opts.decor) return loopObserver && loopObserver.observe(video);
+    video.dataset.audible = opts.silent ? "" : "1";
+    addStory({ src, poster: posterOf(src), caption: opts.caption || captionOf(src) });
+    if (!opts.silent) video.parentElement.append(soundButton(video));
     video.style.cursor = "pointer";
     video.addEventListener("click", () => openStories(src));
+    loopObserver && loopObserver.observe(video);
   }
   const inView = new Set();
   const loopObserver = "IntersectionObserver" in window && new IntersectionObserver((entries) => entries.forEach((en) => {
-    en.isIntersecting ? inView.add(en.target) : inView.delete(en.target);
-    if (reduceMotion) return;
-    if (en.isIntersecting) en.target.play().catch(() => {}); else en.target.pause();
-  }), { threshold: .35 });
+    const v = en.target;
+    en.isIntersecting ? inView.add(v) : inView.delete(v);
+    if (en.isIntersecting) {
+      if (!reduceMotion || !v.muted) v.play().catch(() => {});
+      if (soundOn && audible(v) && en.intersectionRatio > .5) hearOnly(v);
+    } else {
+      v.pause();
+      if (!v.muted) { v.muted = true; refreshSoundButtons(); }
+    }
+  }), { threshold: [.35, .6] });
   function resumeLoops() { if (!reduceMotion) inView.forEach((v) => v.play().catch(() => {})); }
 
   // Hero video card
   const heroVid = $(".hero-video");
   if (heroVid) {
-    const src = SITE.heroVideo || heroVid.getAttribute("src");
-    heroVid.src = src; heroVid.poster = posterOf(src);
-    if (reduceMotion) { heroVid.removeAttribute("autoplay"); heroVid.pause(); }
-    registerLoop(heroVid, src);
-    loopObserver && loopObserver.observe(heroVid);
+    if (reduceMotion) heroVid.removeAttribute("autoplay");
+    registerLoop(heroVid, SITE.heroVideo || heroVid.getAttribute("src"));
   }
 
   // Flat-top clips
   const ftWrap = $(".flat-top-videos");
   const ftList = SITE.flatTopVideos || [];
   $("#flat-top").hidden = !ftList.length;
-  ftWrap.innerHTML = ftList.map((src) => `<div class="ft-clip"><video muted loop playsinline preload="none"
-      poster="${esc(posterOf(src))}" src="${esc(src)}" aria-label="Meat grilling on the flat-top"></video>
+  ftWrap.innerHTML = ftList.map(() => `<div class="ft-clip"><video muted loop playsinline preload="none" aria-label="Meat grilling on the flat-top"></video>
       <span class="ft-expand" aria-hidden="true">⤢</span></div>`).join("");
-  $$("video", ftWrap).forEach((v, i) => { registerLoop(v, ftList[i]); loopObserver && loopObserver.observe(v); });
+  $$("video", ftWrap).forEach((v, i) => registerLoop(v, ftList[i]));
+
+  // One video per section
+  const whyVid = $(".why-video");
+  if (whyVid) SITE.whyVideo ? registerLoop(whyVid, SITE.whyVideo) : whyVid.closest(".why-media").remove();
+  const evVid = $(".event-video");
+  if (evVid) SITE.eventsVideo ? registerLoop(evVid, SITE.eventsVideo, { decor: true }) : evVid.remove();
+  $$(".special-video").forEach((v) => registerLoop(v, v.dataset.src));
+
+  // The Vasquez promise
+  $(".promise-list").innerHTML = (SITE.promise || []).map(([t, d]) => `<li><span class="promise-check">✓</span><b>${esc(t)}</b><p>${esc(d)}</p></li>`).join("");
+  $(".promise").hidden = !(SITE.promise || []).length;
+
+  // Real customer posts
+  const posts = SITE.customerPosts || [];
+  $(".posts").hidden = !posts.length;
+  $(".posts-grid").innerHTML = posts.map((p) => `
+    <figure class="post">
+      <div class="post-media"><video muted loop playsinline preload="none" aria-label="${esc(p.quote)}"></video>
+        <span class="post-tag">@${esc((SITE.social && SITE.social.instagram) || "vasquez_tacos")}</span></div>
+      <figcaption><span class="stars" aria-label="Customer post">★★★★★</span>
+        <blockquote>“${esc(p.quote)}”</blockquote><cite>${esc(p.source)}</cite></figcaption>
+    </figure>`).join("");
+  $$(".post video").forEach((v, i) => registerLoop(v, posts[i].video, { silent: true, caption: posts[i].quote }));
+  refreshSoundButtons();
 
   // Gallery videos: silent preview on hover, full screen with sound on tap
   galleryEl.addEventListener("mouseover", (e) => {

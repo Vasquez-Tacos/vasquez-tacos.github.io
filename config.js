@@ -182,7 +182,7 @@ const SITE = {
      or leave day out for a deal that's available every day.        */
   specials: [
     {
-      day: 4, name: "Taco Thursday", img: "images/taco-thursday.jpg",
+      day: 4, name: "Taco Thursday", video: "media/taco-plate-to-go.mp4",
       deal: "Fresh, hot taco plates",
       items: [
         ["3 tacos (asada, pastor or chicken)", ""],
@@ -203,7 +203,7 @@ const SITE = {
       ],
     },
     {
-      day: 5, name: "Family Taco Night", img: "images/taco-plate.jpg",
+      day: 5, name: "Family Taco Night", video: "media/chicken-taco-plate.mp4",
       deal: "Feeds 4 for $42",
       items: [
         ["16 tacos, 2 meats of your choice", ""],
@@ -271,6 +271,23 @@ const SITE = {
      Short muted clips that loop in the "Cooked fresh" section.
      Put the .mp4 (and a .jpg preview with the same name) in media/. */
   heroVideo: "media/flat-top-sizzle.mp4",   // plays in the video card at the top of the page
+  whyVideo: "media/flat-top-grilling.mp4",   // "Why choose us" section
+  eventsVideo: "",   // optional clip behind the Birthdays event card
+
+  /* ---------- REAL CUSTOMER POSTS ----------
+     Customer stories that tagged @vasquez_tacos. Shown under Reviews.  */
+  customerPosts: [
+    { video: "media/customer-lunch-date.mp4", quote: "So bomb!! Lunch date with my bestie.", source: "Customer story on Instagram" },
+    { video: "media/customer-taco-plate.mp4", quote: "Yummy 😋", source: "Customer story on Instagram" },
+  ],
+
+  /* ---------- THE VASQUEZ PROMISE ---------- */
+  promise: [
+    ["Cooked at your event", "Every taco is grilled fresh on our professional flat-top, right in front of your guests."],
+    ["Here early, set up right", "We arrive ahead of serving time so food is hot and ready when your guests are."],
+    ["Your price, upfront", "Your estimate shows before you book. No surprise fees on the day of your party."],
+    ["We leave it clean", "When the party's over, we pack up and clean our area so you don't have to."],
+  ],
   flatTopVideos: ["media/flat-top-at-the-event.mp4", "media/flat-top-al-pastor.mp4", "media/flat-top-pastor-for-a-crowd.mp4"],
 
   /* ---------- MENU ----------
