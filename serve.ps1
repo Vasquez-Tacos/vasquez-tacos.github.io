@@ -17,20 +17,38 @@ Write-Host "Vasquez Tacos preview running at http://localhost:$Port  (Ctrl+C to 
 try {
   while ($listener.IsListening) {
     $ctx = $listener.GetContext()
-    $path = [Uri]::UnescapeDataString($ctx.Request.Url.AbsolutePath.TrimStart("/"))
-    if ($path -eq "") { $path = "index.html" }
-    $file = [IO.Path]::GetFullPath((Join-Path $root $path))
     $res = $ctx.Response
-    if ($file.StartsWith($root) -and (Test-Path $file -PathType Leaf)) {
-      $bytes = [IO.File]::ReadAllBytes($file)
-      $ext = [IO.Path]::GetExtension($file).ToLower()
-      $res.ContentType = if ($types[$ext]) { $types[$ext] } else { "application/octet-stream" }
-      $res.Headers.Add("Cache-Control", "no-store")
-      $res.OutputStream.Write($bytes, 0, $bytes.Length)
-    } else {
-      $res.StatusCode = 404
+    # One bad request (e.g. a browser cancelling a video download) must not stop the server
+    try {
+      $path = [Uri]::UnescapeDataString($ctx.Request.Url.AbsolutePath.TrimStart("/"))
+      if ($path -eq "") { $path = "index.html" }
+      $file = [IO.Path]::GetFullPath((Join-Path $root $path))
+      if ($file.StartsWith($root) -and (Test-Path $file -PathType Leaf)) {
+        $bytes = [IO.File]::ReadAllBytes($file)
+        $ext = [IO.Path]::GetExtension($file).ToLower()
+        $res.ContentType = if ($types[$ext]) { $types[$ext] } else { "application/octet-stream" }
+        $res.Headers.Add("Cache-Control", "no-store")
+        $res.Headers.Add("Accept-Ranges", "bytes")
+        $start = 0; $end = $bytes.Length - 1
+        # Videos are requested in pieces (byte ranges) so they can stream and seek
+        $range = $ctx.Request.Headers["Range"]
+        if ($range -match '^bytes=(\d*)-(\d*)$') {
+          if ($Matches[1]) { $start = [long]$Matches[1] }
+          if ($Matches[2]) { $end = [math]::Min([long]$Matches[2], $bytes.Length - 1) }
+          if (-not $Matches[1] -and $Matches[2]) { $start = $bytes.Length - [long]$Matches[2]; $end = $bytes.Length - 1 }
+          $res.StatusCode = 206
+          $res.Headers.Add("Content-Range", "bytes $start-$end/$($bytes.Length)")
+        }
+        $res.ContentLength64 = $end - $start + 1
+        $res.OutputStream.Write($bytes, [int]$start, [int]($end - $start + 1))
+      } else {
+        $res.StatusCode = 404
+      }
+    } catch {
+      # client disconnected mid-transfer; keep serving
+    } finally {
+      try { $res.Close() } catch { }
     }
-    $res.Close()
   }
 } finally {
   $listener.Stop()
