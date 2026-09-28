@@ -92,18 +92,18 @@ const SITE = {
   packages: [
     {
       id: "dropoff",
-      name: "Taco Bar Drop-Off",
+      name: "Taco Bar Buffet",
       perGuest: 13.99,
       minGuests: 25,
-      blurb: "Hot, homemade and set up for you. Great for offices and small parties.",
+      blurb: "Grilled fresh at your event, served buffet-style. Great for offices and small parties.",
       includes: [
-        "2 meats: asada, pastor or chicken",
+        "2 meats, grilled on-site on our flat-top",
         "Mexican rice & refried beans",
         "Warm corn tortillas",
         "Salsa roja, salsa verde, onion, cilantro & limes",
         "Chafing dishes & full buffet setup",
         "Plates, napkins & utensils",
-        "Delivered & set up 30 min before serving",
+        "Self-serve buffet, kept hot the whole time",
       ],
     },
     {
@@ -111,11 +111,11 @@ const SITE = {
       name: "Clásico Taquero",
       perGuest: 17.99,
       minGuests: 30,
-      blurb: "A taquero at your party, cooking every taco fresh on the grill.",
+      blurb: "A taquero at your party, grilling every taco fresh on our professional flat-top.",
       includes: [
-        "Asada, pastor & chicken, cooked on-site",
+        "3 meats: asada, pastor, chicken or chorizo",
         "Mexican rice & refried beans",
-        "Warm corn tortillas off the grill",
+        "Warm corn tortillas off the flat-top",
         "House salsas, onion, cilantro & limes",
         "Tortilla chips & salsa",
         "Plates, napkins & utensils",
@@ -130,7 +130,7 @@ const SITE = {
       popular: true,
       blurb: "Our most booked package: tacos, burritos, sodas and a full setup.",
       includes: [
-        "Asada, pastor & chicken, cooked on-site",
+        "All 4 meats: asada, pastor, chicken & chorizo",
         "Tacos + made-to-order burritos",
         "Rice, beans, chips & salsa",
         "Full salsa & toppings bar",
@@ -267,15 +267,21 @@ const SITE = {
     branch: "main",
   },
 
+  /* ---------- FLAT-TOP VIDEOS ----------
+     Short muted clips that loop in the "Cooked fresh" section.
+     Put the .mp4 (and a .jpg preview with the same name) in media/. */
+  flatTopVideos: ["media/flat-top-sizzle.mp4", "media/flat-top-al-pastor.mp4", "media/flat-top-pastor-for-a-crowd.mp4"],
+
   /* ---------- MENU ----------
      Optional: add img: "images/your-photo.jpg" to any item. */
   menu: [
     {
       category: "Tacos",
       items: [
-        { name: "Carne Asada", desc: "Marinated steak, grilled and chopped to order." },
+        { name: "Carne Asada", desc: "Marinated steak, seared on the flat-top and chopped to order." },
         { name: "Al Pastor", desc: "Chile-marinated pork, our family recipe." },
-        { name: "Chicken", desc: "Seasoned grilled chicken, juicy and full of flavor." },
+        { name: "Chicken", desc: "Seasoned chicken, grilled on the flat-top, juicy and full of flavor." },
+        { name: "Chorizo", desc: "Spicy Mexican pork chorizo, cooked on the flat-top until crispy." },
       ],
     },
     {

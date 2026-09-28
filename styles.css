@@ -310,6 +310,17 @@ h3 { font-size: 1.3rem; }
 .merch-teaser h3 { color: #fff; font-size: 1.7rem; margin: 0 0 .2rem; }
 .merch-teaser p { margin: 0; color: #bfae9f; }
 
+/* Flat-top videos */
+.flat-top-videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.ft-clip { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 9 / 14; background: #000; box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+.ft-clip video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ft-clip::after { content: "LIVE ON THE FLAT-TOP"; position: absolute; left: 12px; bottom: 12px; font: 700 .68rem var(--body); letter-spacing: .12em; color: #fff; background: rgba(216,52,42,.9); padding: .4em .7em; border-radius: 4px; }
+@media (max-width: 760px) {
+  .flat-top-videos { grid-template-columns: repeat(3, 72%); overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: -16px; padding: 0 16px 6px; scrollbar-width: none; }
+  .flat-top-videos::-webkit-scrollbar { display: none; }
+  .ft-clip { scroll-snap-align: center; }
+}
+
 /* Social clips */
 .follow { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: flex-end; }
 .clips { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.2rem; align-items: start; }

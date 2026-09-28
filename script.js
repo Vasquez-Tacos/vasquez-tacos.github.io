@@ -188,7 +188,7 @@
   const figure = (g) => `
     <figure class="${g.wide ? "wide " : ""}${g.long ? "long " : ""}${g.video ? "is-video" : ""}">
       ${g.video
-        ? `<video controls playsinline preload="metadata"${g.caption ? ` aria-label="${esc(g.caption)}"` : ""}>
+        ? `<video controls playsinline preload="${g.poster ? "none" : "metadata"}"${g.poster ? ` poster="${esc(g.poster)}"` : ""}${g.caption ? ` aria-label="${esc(g.caption)}"` : ""}>
              ${g.srcs.map((s) => `<source src="${esc(s)}">`).join("")}</video>`
         : `<img src="${esc(g.img)}" alt="${esc(g.caption || "Vasquez Tacos photo")}" loading="lazy"${g.fallback ? ` data-fallback="${esc(g.fallback)}"` : ""}>`}
       ${g.caption ? `<figcaption>${esc(g.caption)}</figcaption>` : ""}
@@ -208,12 +208,15 @@
     fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=${branch}`)
       .then((r) => (r.ok ? r.json() : []))
       .then((files) => {
-        const uploads = files.filter((f) => f.type === "file" && (IMG_EXT.test(f.name) || VID_EXT.test(f.name)))
+        const base = (n) => n.replace(/\.[^.]+$/, "").toLowerCase();
+        const videoNames = new Set(files.filter((f) => VID_EXT.test(f.name)).map((f) => base(f.name)));
+        const posterFor = (n) => files.find((f) => IMG_EXT.test(f.name) && base(f.name) === base(n));
+        const uploads = files.filter((f) => f.type === "file" && (VID_EXT.test(f.name) || (IMG_EXT.test(f.name) && !videoNames.has(base(f.name)))))
           .sort((a, b) => b.name.localeCompare(a.name, undefined, { numeric: true }))
           .map((f) => {
             const local = `${folder}/${encodeURIComponent(f.name)}`;
             return VID_EXT.test(f.name)
-              ? { video: true, srcs: [local, f.download_url], caption: niceCaption(f.name) }
+              ? { video: true, srcs: [local, f.download_url], caption: niceCaption(f.name), poster: posterFor(f.name) && `${folder}/${encodeURIComponent(posterFor(f.name).name)}` }
               : { img: local, fallback: f.download_url, caption: niceCaption(f.name) };
           });
         if (uploads.length) {
@@ -228,6 +231,22 @@
     const img = e.target;
     if (img.tagName === "IMG" && img.dataset.fallback && img.src !== img.dataset.fallback) img.src = img.dataset.fallback;
   }, true);
+
+  // Flat-top clips: muted, looping, only play while on screen
+  const ftWrap = $(".flat-top-videos");
+  const ftList = SITE.flatTopVideos || [];
+  $("#flat-top").hidden = !ftList.length;
+  ftWrap.innerHTML = ftList.map((src) => `<div class="ft-clip"><video muted loop playsinline preload="none"
+      poster="${esc(src.replace(/\.[^.]+$/, ".jpg"))}" src="${esc(src)}" aria-label="Meat grilling on the flat-top"></video></div>`).join("");
+  const ftVideos = $$("video", ftWrap);
+  if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const vio = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (en.isIntersecting) en.target.play().catch(() => {}); else en.target.pause();
+    }), { threshold: .35 });
+    ftVideos.forEach((v) => vio.observe(v));
+  } else {
+    ftVideos.forEach((v) => v.setAttribute("controls", ""));
+  }
 
   // Tap a photo to see it full size
   const lightbox = document.createElement("dialog");
