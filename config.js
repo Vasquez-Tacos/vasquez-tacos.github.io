@@ -270,7 +270,8 @@ const SITE = {
   /* ---------- FLAT-TOP VIDEOS ----------
      Short muted clips that loop in the "Cooked fresh" section.
      Put the .mp4 (and a .jpg preview with the same name) in media/. */
-  flatTopVideos: ["media/flat-top-sizzle.mp4", "media/flat-top-al-pastor.mp4", "media/flat-top-pastor-for-a-crowd.mp4"],
+  heroVideo: "media/flat-top-sizzle.mp4",   // plays in the video card at the top of the page
+  flatTopVideos: ["media/flat-top-at-the-event.mp4", "media/flat-top-al-pastor.mp4", "media/flat-top-pastor-for-a-crowd.mp4"],
 
   /* ---------- MENU ----------
      Optional: add img: "images/your-photo.jpg" to any item. */

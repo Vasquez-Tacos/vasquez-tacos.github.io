@@ -114,6 +114,12 @@ h3 { font-size: 1.3rem; }
 .badges:empty { display: none; }
 .badges li { font-size: .82rem; font-weight: 700; padding: .45em .9em; border-radius: 999px; background: rgba(255,255,255,.12); }
 .badges li::before { content: "✓ "; color: var(--yellow); }
+.hero-media { position: relative; justify-self: end; width: min(100%, 330px); aspect-ratio: 9 / 14; border-radius: 24px; box-shadow: 0 0 0 6px rgba(255,255,255,.08), 0 40px 80px rgba(0,0,0,.6); transform: rotate(2.5deg); }
+.hero-video { width: 100%; height: 100%; object-fit: cover; border-radius: 24px; display: block; background: #000; }
+.hero-live { position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: .45em; font: 700 .7rem var(--body); letter-spacing: .12em; text-transform: uppercase; color: #fff; background: rgba(0,0,0,.55); backdrop-filter: blur(6px); padding: .5em .8em; border-radius: 999px; }
+.hero-live i { width: 8px; height: 8px; border-radius: 50%; background: #ff3b30; box-shadow: 0 0 0 0 rgba(255,59,48,.6); animation: live-dot 1.6s infinite; }
+@keyframes live-dot { 70% { box-shadow: 0 0 0 8px rgba(255,59,48,0); } 100% { box-shadow: 0 0 0 0 rgba(255,59,48,0); } }
+.hero-media .hero-logo { position: absolute; left: -48px; bottom: -36px; width: 124px; transform: rotate(-2.5deg); }
 .hero-logo { justify-self: end; align-self: end; width: min(100%, 230px); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; box-shadow: 0 0 0 10px rgba(246,189,47,.15), 0 30px 80px rgba(0,0,0,.6); animation: spin-in 1s ease-out both .3s; }
 @keyframes spin-in { from { opacity: 0; transform: rotate(-20deg) scale(.8); } }
 
@@ -224,6 +230,7 @@ h3 { font-size: 1.3rem; }
 .gallery figure { margin: 0; border-radius: var(--radius); overflow: hidden; position: relative; background: var(--night); }
 .gallery figure.wide { grid-column: span 2; grid-row: span 2; }
 .gallery figure.long { grid-column: span 2; }
+.gallery-more-wrap { text-align: center; margin-top: 2rem; }
 .gallery { grid-auto-flow: dense; }
 .gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
 .gallery figure:hover img { transform: scale(1.05); }
@@ -650,3 +657,9 @@ h3 { font-size: 1.3rem; }
 .merch-page #crew { background: #0f1b28; }
 .merch-page #crew .kicker { color: #7fb6e6; }
 .merch-page .footer { background: #0b1520; }
+@media (max-width: 860px) {
+  .hero-media { justify-self: center; width: min(78%, 300px); aspect-ratio: 4 / 5; margin: .5rem 0 2rem; transform: none; order: 2; }
+  .hero-media .hero-logo { width: 88px; left: -22px; bottom: -22px; transform: none; box-shadow: 0 10px 24px rgba(0,0,0,.5); }
+  .hero .hero-logo { order: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .hero-live i { animation: none; } }

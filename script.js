@@ -193,10 +193,23 @@
         : `<img src="${esc(g.img)}" alt="${esc(g.caption || "Vasquez Tacos photo")}" loading="lazy"${g.fallback ? ` data-fallback="${esc(g.fallback)}"` : ""}>`}
       ${g.caption ? `<figcaption>${esc(g.caption)}</figcaption>` : ""}
     </figure>`;
+  const GALLERY_START = 9;
+  let galleryItems = [], showAll = false;
   const renderGallery = (items) => {
+    galleryItems = items;
     $("#gallery").hidden = !items.length;
-    galleryEl.innerHTML = items.map(figure).join("");
+    const shown = showAll ? items : items.slice(0, GALLERY_START);
+    galleryEl.innerHTML = shown.map(figure).join("");
+    galleryEl.querySelectorAll("figure").forEach((el) => el.classList.add("reveal", "in"));
+    const more = $(".gallery-more");
+    more.hidden = items.length <= GALLERY_START;
+    more.textContent = showAll ? "Show less" : `Show all ${items.length} photos & videos`;
   };
+  $(".gallery-more").addEventListener("click", () => {
+    showAll = !showAll;
+    renderGallery(galleryItems);
+    if (!showAll) $("#gallery").scrollIntoView();
+  });
   renderGallery(SITE.gallery);
 
   // Photos & videos uploaded to the repo's media folder show up automatically
@@ -211,7 +224,8 @@
         const base = (n) => n.replace(/\.[^.]+$/, "").toLowerCase();
         const videoNames = new Set(files.filter((f) => VID_EXT.test(f.name)).map((f) => base(f.name)));
         const posterFor = (n) => files.find((f) => IMG_EXT.test(f.name) && base(f.name) === base(n));
-        const uploads = files.filter((f) => f.type === "file" && (VID_EXT.test(f.name) || (IMG_EXT.test(f.name) && !videoNames.has(base(f.name)))))
+        const featured = new Set([...(SITE.flatTopVideos || []), SITE.heroVideo || ""].filter(Boolean).map((p) => base(p.split("/").pop())));
+        const uploads = files.filter((f) => f.type === "file" && !featured.has(base(f.name)) && (VID_EXT.test(f.name) || (IMG_EXT.test(f.name) && !videoNames.has(base(f.name)))))
           .sort((a, b) => b.name.localeCompare(a.name, undefined, { numeric: true }))
           .map((f) => {
             const local = `${folder}/${encodeURIComponent(f.name)}`;
@@ -219,10 +233,8 @@
               ? { video: true, srcs: [local, f.download_url], caption: niceCaption(f.name), poster: posterFor(f.name) && `${folder}/${encodeURIComponent(posterFor(f.name).name)}` }
               : { img: local, fallback: f.download_url, caption: niceCaption(f.name) };
           });
-        if (uploads.length) {
-          renderGallery([...uploads, ...SITE.gallery]);
-          galleryEl.querySelectorAll("figure").forEach((el) => el.classList.add("reveal", "in"));
-        }
+        // Your best photos lead, then everything uploaded to media/
+        if (uploads.length) renderGallery([...SITE.gallery, ...uploads]);
       })
       .catch(() => {});
   }
@@ -231,6 +243,13 @@
     const img = e.target;
     if (img.tagName === "IMG" && img.dataset.fallback && img.src !== img.dataset.fallback) img.src = img.dataset.fallback;
   }, true);
+
+  // Hero video card: use the configured clip; show a still image for reduced-motion users
+  const heroVid = $(".hero-video");
+  if (heroVid) {
+    if (SITE.heroVideo) { heroVid.src = SITE.heroVideo; heroVid.poster = SITE.heroVideo.replace(/\.[^.]+$/, ".jpg"); }
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { heroVid.removeAttribute("autoplay"); heroVid.pause(); }
+  }
 
   // Flat-top clips: muted, looping, only play while on screen
   const ftWrap = $(".flat-top-videos");
