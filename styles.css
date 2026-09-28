@@ -783,3 +783,4 @@ h3 { font-size: 1.3rem; }
   .nav-links-simple a:not(.btn) { font-size: .9rem; }
   .merch-page .nav-links-simple .btn { display: none; }
 }
+.cal-live { font-size: .85rem; font-weight: 700; color: var(--green); margin: .4rem 0 0; }

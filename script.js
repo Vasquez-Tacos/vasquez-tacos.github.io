@@ -538,6 +538,52 @@
     }
     calGrid.innerHTML = html;
   }
+  /* ---------- Live availability from Google Calendar ----------
+     Uses the public free/busy view, so no customer details are ever loaded. */
+  async function loadGoogleCalendar() {
+    const gc = SITE.googleCalendar || {};
+    if (!gc.id || !gc.apiKey) return;
+    const perDay = new Map();   // iso -> { blocks, hours }
+    const add = (iso, hrs) => { const d = perDay.get(iso) || { blocks: 0, hours: 0 }; d.blocks++; d.hours += hrs; perDay.set(iso, d); };
+    const end = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 1);
+    const chunks = [];
+    for (let t = new Date(today); t < end; t = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 56)) {
+      const tEnd = new Date(Math.min(end, new Date(t.getFullYear(), t.getMonth(), t.getDate() + 56)));
+      chunks.push([t, tEnd]);
+    }
+    try {
+      const results = await Promise.all(chunks.map(([a, b]) =>
+        fetch(`https://www.googleapis.com/calendar/v3/freeBusy?key=${encodeURIComponent(gc.apiKey)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ timeMin: a.toISOString(), timeMax: b.toISOString(), timeZone: "America/Los_Angeles", items: [{ id: gc.id }] }),
+        }).then((r) => r.ok ? r.json() : Promise.reject(r.status))));
+      for (const res of results) {
+        const cal = res.calendars && res.calendars[gc.id];
+        if (!cal || (cal.errors && cal.errors.length)) throw new Error("calendar not public");
+        for (const { start, end: stop } of cal.busy) {
+          // Split each busy block across the days it covers (local time)
+          let s = new Date(start); const e = new Date(stop);
+          while (s < e) {
+            const nextDay = new Date(s.getFullYear(), s.getMonth(), s.getDate() + 1);
+            const segEnd = e < nextDay ? e : nextDay;
+            add(toISO(s), (segEnd - s) / 36e5);
+            s = segEnd;
+          }
+        }
+      }
+      booked.clear(); limited.clear();
+      perDay.forEach(({ blocks, hours }, iso) => {
+        (blocks >= 2 || hours >= (gc.bookedHours || 6) ? booked : limited).add(iso);
+      });
+      renderCalendar();
+      const note = $(".cal-live");
+      if (note) { note.hidden = false; note.textContent = "● Live availability, synced with our calendar"; }
+    } catch (err) {
+      console.warn("Google Calendar availability unavailable, using manual dates.", err);
+    }
+  }
+  loadGoogleCalendar();
   $$(".cal-nav").forEach((b) => b.addEventListener("click", () => {
     view = new Date(view.getFullYear(), view.getMonth() + +b.dataset.dir, 1);
     renderCalendar();

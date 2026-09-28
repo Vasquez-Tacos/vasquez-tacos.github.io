@@ -69,6 +69,17 @@ const SITE = {
      Until then, the form opens the customer's email app.          */
   formEndpoint: "",       // e.g. "https://formspree.io/f/abcdwxyz"
 
+  /* ---------- GOOGLE CALENDAR (live availability) ----------
+     Paste your calendar ID and API key to have the website read your
+     "Vasquez Tacos Events" Google Calendar. Leave "" to use the
+     manual booked/limited lists below instead.
+     Rules: 1 event on a day = Limited. 2+ events, an all-day event,
+     or 6+ busy hours = Booked.                                      */
+  googleCalendar: {
+    id: "",               // e.g. "abc123@group.calendar.google.com"
+    apiKey: "",           // e.g. "AIzaSy..."
+    bookedHours: 6,
+  },
   /* ---------- AVAILABILITY ----------
      Dates are YYYY-MM-DD. "booked" = fully booked,
      "limited" = one event already, may fit a small one.           */
