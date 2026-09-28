@@ -271,6 +271,7 @@ const SITE = {
      Short muted clips that loop in the "Cooked fresh" section.
      Put the .mp4 (and a .jpg preview with the same name) in media/. */
   heroVideo: "media/flat-top-sizzle.mp4",   // plays in the video card at the top of the page
+  heroCaption: "Bloopers!",                  // caption on that video (leave "" for none)
   whyVideo: "media/flat-top-grilling.mp4",   // "Why choose us" section
   eventsVideo: "",   // optional clip behind the Birthdays event card
 

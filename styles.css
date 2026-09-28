@@ -772,3 +772,6 @@ h3 { font-size: 1.3rem; }
 @media (max-width: 560px) {
   .why-split .why, .promise-list { grid-template-columns: 1fr; }
 }
+.hero-caption { position: absolute; left: 18px; top: 52px; z-index: 2; font: italic 800 1.5rem var(--display); color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.7); transform: rotate(-4deg); pointer-events: none; }
+.hero-media .hero-logo ~ .sound-btn, .hero-media .sound-btn { bottom: 16px; }
+@media (max-width: 860px) { .hero-caption { font-size: 1.2rem; top: 48px; } }

@@ -388,7 +388,8 @@
   const heroVid = $(".hero-video");
   if (heroVid) {
     if (reduceMotion) heroVid.removeAttribute("autoplay");
-    registerLoop(heroVid, SITE.heroVideo || heroVid.getAttribute("src"));
+    registerLoop(heroVid, SITE.heroVideo || heroVid.getAttribute("src"), { caption: SITE.heroCaption || undefined });
+    if (SITE.heroCaption) heroVid.insertAdjacentHTML("afterend", `<span class="hero-caption">${esc(SITE.heroCaption)}</span>`);
   }
 
   // Flat-top clips
