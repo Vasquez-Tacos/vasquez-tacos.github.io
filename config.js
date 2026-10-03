@@ -83,14 +83,8 @@ const SITE = {
   /* ---------- AVAILABILITY ----------
      Dates are YYYY-MM-DD. "booked" = fully booked,
      "limited" = one event already, may fit a small one.           */
-  booked: [
-    "2026-10-03", "2026-10-10", "2026-10-17", "2026-10-24",
-    "2026-10-31", "2026-11-07", "2026-11-14", "2026-12-12",
-    "2026-12-19",
-  ],
-  limited: [
-    "2026-10-04", "2026-10-18", "2026-11-21", "2026-12-05",
-  ],
+  booked: [],             // e.g. "2026-11-14" (fully booked)
+  limited: [],            // e.g. "2026-11-21" (one event already)
   closedWeekdays: [],     // 0=Sun … 6=Sat, e.g. [0] to close Sundays
   minDaysNotice: 7,       // how far ahead customers must book
 
