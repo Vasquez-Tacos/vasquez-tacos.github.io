@@ -291,14 +291,15 @@ const SITE = {
      Replace with your own story any time. A photo of the family or crew
      at the flat-top works best (put it in images/ and set photo).      */
   about: {
-    title: "Meet the Vasquez family.",
+    title: "From the ballpark to your party.",
     photo: "images/salsa-prep.jpg",
     paragraphs: [
-      "Vasquez Tacos is a family business from Fontana, California, built on our own recipes for carne asada, al pastor, chicken and chorizo.",
-      "We make our salsas, rice and beans from scratch and grill every taco fresh on our flat-top, right at your event. When you book with us, you work directly with the family, from the first text to the last plate.",
-      "And yes, Mr. Vasquez is a proud Dodgers fan. That's where our Fontana blue merch comes from.",
+      "Vasquez Tacos started years ago at the park. While our kids were growing up playing sports, we made tacos for team fundraisers and charity events. Families kept coming back for more, people started asking around, and before long everyone wanted Vasquez Tacos at their parties.",
+      "Pearl is the backbone of Vasquez Tacos. She makes every batch of rice, beans and salsa from scratch and keeps everything running behind the scenes.",
+      "Mr. Vasquez runs the flat-top and cooks every order of carne asada, al pastor, chicken and chorizo. For the past 6 to 7 years he has kept going strong through kidney dialysis while raising a full family, and he still shows up for every event.",
+      "And yes, he's a proud Dodgers fan. That's where our Fontana blue merch comes from.",
     ],
-    sign: "— The Vasquez family",
+    sign: "— Pearl, Mr. Vasquez & family",
   },
   /* ---------- ANNOUNCEMENT BAR ----------
      Short message across the top of the site. Set text to "" to hide.  */

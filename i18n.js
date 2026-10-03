@@ -134,6 +134,16 @@
     "And yes, Mr. Vasquez is a proud Dodgers fan. That's where our Fontana blue merch comes from.":
       "Y sí, el Sr. Vasquez es un orgulloso fan de los Dodgers. De ahí viene el azul de nuestra mercancía.",
     "— The Vasquez family": "— La familia Vasquez",
+    "From the ballpark to your party.": "Del parque a tu fiesta.",
+    "Vasquez Tacos started years ago at the park. While our kids were growing up playing sports, we made tacos for team fundraisers and charity events. Families kept coming back for more, people started asking around, and before long everyone wanted Vasquez Tacos at their parties.":
+      "Vasquez Tacos empezó hace años en el parque. Mientras nuestros hijos crecían jugando deportes, hacíamos tacos para recaudar fondos para los equipos y para eventos de caridad. Las familias siempre regresaban por más, la gente empezó a preguntar por nosotros y pronto todos querían Vasquez Tacos en sus fiestas.",
+    "Pearl is the backbone of Vasquez Tacos. She makes every batch of rice, beans and salsa from scratch and keeps everything running behind the scenes.":
+      "Pearl es el corazón de Vasquez Tacos. Ella prepara desde cero todo el arroz, los frijoles y las salsas, y hace que todo funcione detrás de escena.",
+    "Mr. Vasquez runs the flat-top and cooks every order of carne asada, al pastor, chicken and chorizo. For the past 6 to 7 years he has kept going strong through kidney dialysis while raising a full family, and he still shows up for every event.":
+      "El Sr. Vasquez está en la plancha y cocina cada orden de carne asada, al pastor, pollo y chorizo. Desde hace 6 o 7 años sigue adelante con fuerza a pesar de la diálisis, mientras saca adelante a toda su familia, y sigue presente en cada evento.",
+    "And yes, he's a proud Dodgers fan. That's where our Fontana blue merch comes from.":
+      "Y sí, es un orgulloso fan de los Dodgers. De ahí viene el azul de nuestra mercancía.",
+    "— Pearl, Mr. Vasquez & family": "— Pearl, el Sr. Vasquez y familia",
 
     // Menu
     "Nuestro menú": "Nuestro menú", "Tacos, burritos & the classics.": "Tacos, burritos y los clásicos.",
