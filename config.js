@@ -296,7 +296,7 @@ const SITE = {
     paragraphs: [
       "Vasquez Tacos started years ago at the park. While our kids were growing up playing sports, we made tacos for team fundraisers and charity events. Families kept coming back for more, people started asking around, and before long everyone wanted Vasquez Tacos at their parties.",
       "Pearl is the backbone of Vasquez Tacos. She makes every batch of rice, beans and salsa from scratch and keeps everything running behind the scenes.",
-      "Mr. Vasquez runs the flat-top and cooks every order of carne asada, al pastor, chicken and chorizo. For the past 6 to 7 years he has kept going strong through kidney dialysis while raising a full family, and he still shows up for every event.",
+      "Mr. Vasquez runs the flat-top and cooks every order of carne asada, al pastor, chicken and chorizo. He has faced some health challenges over the years, but he's doing great, still going strong and loving every event, with the same energy he brings to feeding his family.",
       "And yes, he's a proud Dodgers fan. That's where our Fontana blue merch comes from.",
     ],
     sign: "— Pearl, Mr. Vasquez & family",
