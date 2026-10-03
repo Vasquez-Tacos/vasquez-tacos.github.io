@@ -45,6 +45,41 @@
       ({ instagram: `https://www.instagram.com/${h}/`, tiktok: `https://www.tiktok.com/@${h}`, facebook: `https://www.facebook.com/${h}`, youtube: `https://www.youtube.com/@${h}` }[k])),
   });
   document.head.append(ld);
+  // FAQ answers as structured data, so Google can show them in search results
+  const faqLd = document.createElement("script");
+  faqLd.type = "application/ld+json";
+  faqLd.textContent = JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage",
+    mainEntity: SITE.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) });
+  document.head.append(faqLd);
+
+  /* ---------- Announcement bar (dismissed per visitor, comes back if the text changes) ---------- */
+  const ann = SITE.announcement, annEl = $(".announce");
+  if (ann && ann.text && annEl) {
+    let dismissed = "";
+    try { dismissed = localStorage.getItem("vt-announce") || ""; } catch {}
+    if (dismissed !== ann.text) {
+      annEl.hidden = false;
+      $("[data-announce-text]", annEl).textContent = ann.text;
+      const a = $("[data-announce-link]", annEl);
+      if (ann.link) { a.href = ann.link; a.textContent = (ann.linkText || "Learn more") + " →"; } else a.remove();
+      $(".announce-close", annEl).addEventListener("click", () => {
+        annEl.hidden = true;
+        try { localStorage.setItem("vt-announce", ann.text); } catch {}
+      });
+    }
+  }
+
+  /* ---------- Cities we serve: tap a city to start a quote there ---------- */
+  const cityList = $(".cities");
+  if (cityList) {
+    $("#service-area").hidden = !(SITE.cities || []).length;
+    cityList.innerHTML = (SITE.cities || []).map((c) => `<li><a href="#quote" data-city="${esc(c)}">📍 ${esc(c)}</a></li>`).join("");
+    cityList.addEventListener("click", (e) => {
+      const city = e.target.closest("[data-city]")?.dataset.city;
+      const loc = $(".book-form [name=location]");
+      if (city && loc && !loc.value) loc.value = city + ", CA";
+    });
+  }
   $$("[data-email]").forEach((a) => { if (biz.email) { a.textContent = biz.email; a.href = "mailto:" + biz.email; } else a.remove(); });
   $$("[data-area]").forEach((el) => (el.textContent = `${biz.city} · Serving ${biz.serviceArea}`));
   $$("[data-hours]").forEach((el) => (el.textContent = biz.hours));

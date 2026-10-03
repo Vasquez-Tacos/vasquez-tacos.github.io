@@ -792,3 +792,15 @@ h3 { font-size: 1.3rem; }
 .referral p { margin: 0; font-size: .95rem; }
 .referral-btn { background: var(--night) !important; white-space: nowrap; }
 @media (max-width: 760px) { .referral { grid-template-columns: 1fr; text-align: center; } .referral-icon { display: none; } }
+/* Announcement bar */
+.announce { position: relative; background: var(--yellow); color: var(--night); text-align: center; padding: .55rem 2.6rem; font-size: .9rem; font-weight: 700; }
+.announce p { margin: 0; }
+.announce a { color: var(--red-dark); white-space: nowrap; }
+.announce-close { position: absolute; right: .6rem; top: 50%; transform: translateY(-50%); background: none; border: 0; font-size: 1.4rem; line-height: 1; cursor: pointer; color: var(--night); padding: .2rem .5rem; }
+.hero { padding-top: 150px; }
+
+/* Cities we serve */
+.cities { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
+.cities a { display: inline-block; padding: .6em 1.1em; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; transition: border-color .2s, transform .2s; }
+.cities a:hover { border-color: var(--red); transform: translateY(-2px); }
+@media (max-width: 560px) { .announce { font-size: .82rem; text-align: left; padding-left: 1rem; } .hero { padding-top: 130px; } }

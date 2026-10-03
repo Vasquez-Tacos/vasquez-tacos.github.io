@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /flyer.html
+
+Sitemap: https://vasquez-tacos.github.io/sitemap.xml

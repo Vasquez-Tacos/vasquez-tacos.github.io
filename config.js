@@ -287,6 +287,18 @@ const SITE = {
     { video: "media/customer-taco-plate.mp4", quote: "Yummy 😋", source: "Customer story on Instagram" },
   ],
 
+  /* ---------- ANNOUNCEMENT BAR ----------
+     Short message across the top of the site. Set text to "" to hide.  */
+  announcement: {
+    text: "Now booking holiday parties. December dates fill fast!",
+    link: "#availability",
+    linkText: "Check dates",
+  },
+
+  /* ---------- CITIES WE SERVE ----------
+     Free travel within 25 miles of Fontana (see policies). */
+  cities: ["Fontana", "Rialto", "Rancho Cucamonga", "Ontario", "Upland", "San Bernardino",
+    "Colton", "Bloomington", "Jurupa Valley", "Eastvale", "Chino", "Montclair", "Riverside", "Redlands"],
   /* ---------- REFER A FRIEND ----------
      Shown on the site and the printable flyer. Set to null to hide. */
   referral: {
