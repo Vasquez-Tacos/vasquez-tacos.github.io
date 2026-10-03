@@ -12,7 +12,7 @@ const SITE = {
     phone: "(909) 900-5672",
     email: "",                         // TODO: add email, e.g. "hello@vasqueztacos.com"
     city: "Fontana, California",
-    website: "",                       // your live site URL once it's published
+    website: "https://vasquez-tacos.github.io/",   // live address: used by the flyer QR code, share links and Google
     serviceArea: "Fontana & the Inland Empire",
     hours: "Events 7 days a week · Calls & texts 9am–8pm",
     pickup: "Call, text or message us on Facebook to order. Delivery available for 5+ orders. Please order the day before for party trays.",
@@ -267,7 +267,7 @@ const SITE = {
      "media" folder of the GitHub repo. They appear in the gallery
      automatically, newest file name first. No code changes needed.   */
   media: {
-    repo: "mariobejarano14mb-creator/VasquezTacos",
+    repo: "Vasquez-Tacos/vasquez-tacos.github.io",
     folder: "media",
     branch: "main",
   },
@@ -287,6 +287,13 @@ const SITE = {
     { video: "media/customer-taco-plate.mp4", quote: "Yummy 😋", source: "Customer story on Instagram" },
   ],
 
+  /* ---------- REFER A FRIEND ----------
+     Shown on the site and the printable flyer. Set to null to hide. */
+  referral: {
+    title: "Refer a friend, get $25 off",
+    text: "Send a friend our way. When they book an event, you get $25 off your next event or meal-deal order. Just have them mention your name.",
+    flyer: "Refer a friend who books, and get $25 off your next event!",
+  },
   /* ---------- THE VASQUEZ PROMISE ---------- */
   promise: [
     ["Cooked at your event", "Every taco is grilled fresh on our professional flat-top, right in front of your guests."],

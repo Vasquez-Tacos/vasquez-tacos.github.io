@@ -1,9 +1,9 @@
-﻿# Your photos & videos
+# Your photos & videos
 
 Anything you upload to this folder shows up in the website's gallery automatically.
 
 ## How to upload (phone or computer)
-1. Open https://github.com/mariobejarano14mb-creator/VasquezTacos/tree/main/media
+1. Open https://github.com/Vasquez-Tacos/vasquez-tacos.github.io/tree/main/media
 2. Tap **Add file → Upload files**.
 3. Pick your photos or videos, then tap **Commit changes**.
 

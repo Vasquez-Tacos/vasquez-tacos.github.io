@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flyer | Vasquez Tacos</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,800;1,9..144,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #1f1613; --night: #1c1210; --red: #d8342a; --yellow: #f6bd2f; --cream: #fbf6ef; --muted: #6e5d53; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #d9d2c7; font-family: "DM Sans", system-ui, sans-serif; color: var(--ink); }
+    .toolbar { display: flex; gap: .6rem; justify-content: center; padding: 1rem; flex-wrap: wrap; }
+    .toolbar button, .toolbar a { font: 700 .95rem "DM Sans", sans-serif; padding: .7em 1.3em; border-radius: 999px; border: 0; cursor: pointer; background: var(--red); color: #fff; text-decoration: none; }
+    .toolbar a { background: #fff; color: var(--ink); }
+    .sheet { width: 8.5in; height: 11in; margin: 0 auto 2rem; background: var(--cream); box-shadow: 0 10px 40px rgba(0,0,0,.2); display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+    .top { position: relative; height: 3.55in; color: #fff; padding: .55in .6in;
+      background: linear-gradient(90deg, rgba(20,12,10,.92), rgba(20,12,10,.55)), url("images/wedding-setup.jpg") center/cover; }
+    .top img.logo { position: absolute; right: .55in; top: .5in; width: 1.55in; border-radius: 50%; box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+    .eyebrow { display: inline-block; font-weight: 700; font-size: 11pt; letter-spacing: .14em; text-transform: uppercase; color: var(--yellow); border: 1.5px solid rgba(246,189,47,.6); border-radius: 999px; padding: .3em .9em; }
+    h1 { font: 800 40pt/1 "Fraunces", Georgia, serif; margin: .25in 0 .12in; max-width: 5in; }
+    h1 em { color: var(--yellow); }
+    .lead { font-size: 13pt; max-width: 5.2in; margin: 0; color: #eadfd3; }
+    .mid { padding: .32in .6in .2in; display: grid; grid-template-columns: 1fr 1fr; gap: .22in .45in; align-content: start; }
+    h2 { font: 800 17pt "Fraunces", Georgia, serif; margin: 0 0 .1in; }
+    .kicker { font-weight: 700; font-size: 9pt; letter-spacing: .16em; text-transform: uppercase; color: var(--red); margin: 0 0 .05in; }
+    ul { list-style: none; margin: 0; padding: 0; }
+    .pkgs li { display: flex; justify-content: space-between; gap: .2in; padding: .07in 0; border-bottom: 1px dashed #d9cbb7; font-size: 11.5pt; }
+    .pkgs b { white-space: nowrap; }
+    .checks li { padding: .05in 0 .05in .25in; position: relative; font-size: 11.5pt; }
+    .checks li::before { content: "✓"; position: absolute; left: 0; color: #4f8a3c; font-weight: 700; }
+    .deals li { padding: .07in 0; border-bottom: 1px dashed #d9cbb7; font-size: 11.5pt; }
+    .deals li b { display: block; }
+    .offer { grid-column: 1 / -1; background: var(--yellow); border-radius: .15in; padding: .16in .25in; font: 800 14pt "Fraunces", Georgia, serif; text-align: center; }
+    .bottom { background: var(--night); color: #fff; padding: .22in .6in; display: grid; grid-template-columns: 1fr auto; gap: .4in; align-items: center; }
+    .bottom .phone { font: 800 30pt "Fraunces", Georgia, serif; color: var(--yellow); margin: .05in 0; }
+    .bottom p { margin: 0; font-size: 11pt; color: #d8cbbd; }
+    .qr { background: #fff; border-radius: .12in; padding: .12in; text-align: center; color: var(--ink); }
+    .qr img { width: 1.25in; height: 1.25in; display: block; }
+    .qr span { display: block; font-weight: 700; font-size: 9pt; margin-top: .05in; }
+    @media print {
+      @page { size: letter; margin: 0; }
+      body { background: none; }
+      .toolbar { display: none; }
+      .sheet { margin: 0; box-shadow: none; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+    @media screen and (max-width: 860px) {
+      .sheet { zoom: calc(100vw / 8.7in); }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button onclick="print()">Print or save as PDF</button>
+    <a href="index.html">← Back to site</a>
+  </div>
+
+  <main class="sheet">
+    <section class="top">
+      <img class="logo" src="logo.jpg" alt="Vasquez Tacos logo">
+      <span class="eyebrow">Family owned · Fontana, CA</span>
+      <h1>Street tacos for your <em>next event.</em></h1>
+      <p class="lead" data-lead></p>
+    </section>
+
+    <section class="mid">
+      <div>
+        <p class="kicker">Catering packages</p>
+        <h2>Priced per guest</h2>
+        <ul class="pkgs" data-pkgs></ul>
+      </div>
+      <div>
+        <p class="kicker">Every event includes</p>
+        <h2>We handle it all</h2>
+        <ul class="checks">
+          <li>Grilled fresh on our flat-top at your event</li>
+          <li>Asada, pastor, chicken &amp; chorizo</li>
+          <li>Rice, beans, salsas &amp; toppings</li>
+          <li>Setup, serving &amp; cleanup</li>
+          <li>Weddings, birthdays, quinces, corporate</li>
+        </ul>
+      </div>
+      <div style="grid-column: 1 / -1">
+        <p class="kicker">Weekly meal deals</p>
+        <ul class="deals" data-deals style="columns: 2; column-gap: .45in"></ul>
+      </div>
+      <p class="offer" data-offer hidden></p>
+    </section>
+
+    <section class="bottom">
+      <div>
+        <p>Call or text to book · free quotes</p>
+        <p class="phone" data-phone></p>
+        <p data-socials></p>
+      </div>
+      <div class="qr">
+        <img data-qr alt="QR code to the Vasquez Tacos website">
+        <span>Scan for prices &amp; dates</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script>
+    (() => {
+      const $ = (s) => document.querySelector(s);
+      const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      const money = (n) => "$" + n.toFixed(2).replace(/\.00$/, "");
+      const from = Math.min(...SITE.packages.map((p) => p.perGuest));
+      $("[data-lead]").textContent = `Premium taco catering across the Inland Empire, from ${money(from)} per guest.`;
+      $("[data-pkgs]").innerHTML = SITE.packages.map((p) =>
+        `<li><span>${esc(p.name)}${p.popular ? " ⭐" : ""}</span><b>${money(p.perGuest)}/guest</b></li>`).join("");
+      $("[data-deals]").innerHTML = SITE.specials.map((s) =>
+        `<li><b>${esc(s.name)}</b>${esc(s.deal)}</li>`).join("");
+      if (SITE.referral) { $("[data-offer]").hidden = false; $("[data-offer]").textContent = SITE.referral.flyer || SITE.referral.title; }
+      $("[data-phone]").textContent = SITE.business.phone;
+      const ig = SITE.social && SITE.social.instagram;
+      $("[data-socials]").textContent = [ig && `Instagram @${ig}`, SITE.social && SITE.social.facebook && "Facebook: Vasquez Tacos"].filter(Boolean).join("  ·  ");
+      // QR always points at wherever this site is hosted, so it stays correct after a move
+      const site = SITE.business.website || new URL("./", location.href).href;
+      $("[data-qr]").src = `https://api.qrserver.com/v1/create-qr-code/?size=480x480&margin=0&data=${encodeURIComponent(site)}`;
+    })();
+  </script>
+</body>
+</html>

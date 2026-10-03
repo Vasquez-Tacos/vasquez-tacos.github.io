@@ -415,6 +415,28 @@
   $(".promise-list").innerHTML = (SITE.promise || []).map(([t, d]) => `<li><span class="promise-check">✓</span><b>${esc(t)}</b><p>${esc(d)}</p></li>`).join("");
   $(".promise").hidden = !(SITE.promise || []).length;
 
+  // Refer a friend: share the site with the phone's share sheet, or copy the link
+  const ref = SITE.referral, refBox = $(".referral");
+  if (ref && refBox) {
+    refBox.hidden = false;
+    $("[data-ref-title]").textContent = ref.title;
+    $("[data-ref-text]").textContent = ref.text;
+    const shareBtn = $("[data-ref-share]");
+    const siteUrl = SITE.business.website || new URL("./", location.href).href;
+    const shareText = "Check out Vasquez Tacos! Taco catering grilled fresh at your event in Fontana & the Inland Empire.";
+    shareBtn.href = `sms:?&body=${encodeURIComponent(shareText + " " + siteUrl)}`;
+    shareBtn.addEventListener("click", async (e) => {
+      if (navigator.share) {
+        e.preventDefault();
+        try { await navigator.share({ title: "Vasquez Tacos", text: shareText, url: siteUrl }); } catch {}
+      } else if (navigator.clipboard && !/Mobi/i.test(navigator.userAgent)) {
+        e.preventDefault();
+        await navigator.clipboard.writeText(siteUrl).catch(() => {});
+        shareBtn.textContent = "Link copied!";
+        setTimeout(() => (shareBtn.textContent = "Share with a friend"), 2000);
+      }
+    });
+  }
   // Real customer posts
   const posts = SITE.customerPosts || [];
   $(".posts").hidden = !posts.length;
