@@ -287,6 +287,19 @@ const SITE = {
     { video: "media/customer-taco-plate.mp4", quote: "Yummy 😋", source: "Customer story on Instagram" },
   ],
 
+  /* ---------- ABOUT US ----------
+     Replace with your own story any time. A photo of the family or crew
+     at the flat-top works best (put it in images/ and set photo).      */
+  about: {
+    title: "Meet the Vasquez family.",
+    photo: "images/salsa-prep.jpg",
+    paragraphs: [
+      "Vasquez Tacos is a family business from Fontana, California, built on our own recipes for carne asada, al pastor, chicken and chorizo.",
+      "We make our salsas, rice and beans from scratch and grill every taco fresh on our flat-top, right at your event. When you book with us, you work directly with the family, from the first text to the last plate.",
+      "And yes, Mr. Vasquez is a proud Dodgers fan. That's where our Fontana blue merch comes from.",
+    ],
+    sign: "— The Vasquez family",
+  },
   /* ---------- ANNOUNCEMENT BAR ----------
      Short message across the top of the site. Set text to "" to hide.  */
   announcement: {

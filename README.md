@@ -32,6 +32,9 @@ powershell -ExecutionPolicy Bypass -File add-videos.ps1 "C:\path\to\your\OneDriv
 
 This makes a small .mp4 and a .jpg preview for each video in `media/`. Rename them to describe the clip (the name becomes the caption), then push to GitHub. The three clips in the "Grilled fresh on our flat-top" section are listed in `flatTopVideos` in `config.js`.
 
+## English / Español
+The site has an English / Español button. Spanish speakers get Spanish automatically. Translations live in `i18n.js`: when you add or change text in `config.js`, add the matching Spanish line there, or it shows in English.
+
 ## Booking requests
 Until a form service is set up, "Request My Booking" opens the customer's texting app with their whole request typed out, addressed to the business phone.
 

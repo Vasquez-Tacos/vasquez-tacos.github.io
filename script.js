@@ -69,6 +69,17 @@
     }
   }
 
+  /* ---------- About us ---------- */
+  const about = SITE.about;
+  $("#about").hidden = !about;
+  if (about) {
+    $("[data-about-title]").textContent = about.title;
+    $(".about-text").innerHTML = about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("");
+    $("[data-about-sign]").textContent = about.sign || "";
+    const ph = $("[data-about-photo]");
+    ph.src = about.photo || "logo.jpg";
+    ph.alt = "Vasquez Tacos";
+  }
   /* ---------- Cities we serve: tap a city to start a quote there ---------- */
   const cityList = $(".cities");
   if (cityList) {

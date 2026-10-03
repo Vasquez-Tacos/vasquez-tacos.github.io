@@ -804,3 +804,21 @@ h3 { font-size: 1.3rem; }
 .cities a { display: inline-block; padding: .6em 1.1em; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; transition: border-color .2s, transform .2s; }
 .cities a:hover { border-color: var(--red); transform: translateY(-2px); }
 @media (max-width: 560px) { .announce { font-size: .82rem; text-align: left; padding-left: 1rem; } .hero { padding-top: 130px; } }
+/* About us */
+.about-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 3.5rem; align-items: center; }
+.about-photo { position: relative; }
+.about-photo [data-about-photo] { width: 100%; aspect-ratio: 4 / 3.2; object-fit: cover; border-radius: var(--radius); box-shadow: 0 30px 60px rgba(31,22,19,.2); }
+.about-badge { position: absolute; right: -24px; bottom: -24px; width: 110px; border-radius: 50%; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+.about-text p { color: var(--muted); font-size: 1.08rem; margin: 0 0 1rem; }
+.about-sign { font: italic 800 1.3rem var(--display); color: var(--red); margin: .4rem 0 0; }
+@media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 2.4rem; } .about-badge { right: 12px; bottom: -20px; width: 88px; } }
+/* English / Español toggle */
+.lang-toggle { font: 700 .82rem var(--body); letter-spacing: .02em; padding: .45em .9em; border-radius: 999px; cursor: pointer;
+  background: transparent; color: inherit; border: 1.5px solid currentColor; opacity: .9; }
+.nav:not(.scrolled):not(.menu-open) .lang-toggle { color: #fff; }
+.nav.scrolled .lang-toggle, .nav.menu-open .lang-toggle { color: var(--ink); }
+.lang-toggle:hover { opacity: 1; background: rgba(255,255,255,.12); }
+@media (max-width: 1080px) { .nav-links .lang-toggle { align-self: flex-start; margin: .6rem 0 .2rem; } }
+.merch-page .lang-toggle { color: var(--mblue); }
+@media (max-width: 560px) { .merch-page .nav-links-simple { gap: .6rem; } .merch-page .lang-toggle { font-size: .75rem; padding: .35em .7em; } }.logo-text { white-space: nowrap; }
+@media (min-width: 1081px) and (max-width: 1320px) { .nav-links { gap: 1.1rem; } .nav-links a:not(.btn) { font-size: .9rem; } }
