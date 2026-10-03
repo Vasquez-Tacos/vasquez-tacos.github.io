@@ -41,7 +41,7 @@
     ...(biz.website && { url: biz.website }), ...(biz.email && { email: biz.email }),
     address: { "@type": "PostalAddress", addressLocality: "Fontana", addressRegion: "CA", addressCountry: "US" },
     areaServed: biz.serviceArea, priceRange: "$$",
-    sameAs: Object.entries(SITE.social || {}).filter(([, h]) => h).map(([k, h]) =>
+    sameAs: Object.entries(SITE.social || {}).filter(([, h]) => h).map(([k, h]) => /^https?:\/\//i.test(h) ? h :
       ({ instagram: `https://www.instagram.com/${h}/`, tiktok: `https://www.tiktok.com/@${h}`, facebook: `https://www.facebook.com/${h}`, youtube: `https://www.youtube.com/@${h}` }[k])),
   });
   document.head.append(ld);
@@ -64,13 +64,17 @@
     facebook: ["Facebook", (h) => `https://www.facebook.com/${h}`],
     youtube: ["YouTube", (h) => `https://www.youtube.com/@${h}`],
   };
+  // Each entry can be a handle ("vasquez_tacos") or a full profile link
+  const isUrl = (h) => /^https?:\/\//i.test(String(h).trim());
   const socials = Object.entries(SITE.social || {}).filter(([k, h]) => PROFILES[k] && handle(h))
-    .map(([k, h]) => [PROFILES[k][0], PROFILES[k][1](encodeURIComponent(handle(h))), handle(h)]);
+    .map(([k, h]) => isUrl(h)
+      ? [PROFILES[k][0], String(h).trim(), ""]
+      : [PROFILES[k][0], PROFILES[k][1](encodeURIComponent(handle(h))), handle(h)]);
   $(".socials").innerHTML = socials.length
     ? socials.map(([n, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${n}</a>`).join("<br>")
     : `<a href="${telHref}">Call us: ${esc(biz.phone)}</a>`;
   $(".follow").innerHTML = socials.map(([n, url, h]) =>
-    `<a class="btn btn-ghost btn-small" href="${esc(url)}" target="_blank" rel="noopener">${n} · @${esc(h)}</a>`).join("");
+    `<a class="btn btn-ghost btn-small" href="${esc(url)}" target="_blank" rel="noopener">${n}${h ? ` · @${esc(h)}` : ""}</a>`).join("");
 
   // Turn a pasted post/video link into that platform's official embed
   const scripts = new Set();

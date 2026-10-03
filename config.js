@@ -31,7 +31,7 @@ const SITE = {
   social: {
     instagram: "vasquez_tacos",
     tiktok: "",           // e.g. "vasqueztacos"
-    facebook: "",         // page name from facebook.com/____
+    facebook: "https://www.facebook.com/people/Vasquez-Tacos/61583744948716/",   // handle or full link
     youtube: "",          // e.g. "vasqueztacos"
   },
 
